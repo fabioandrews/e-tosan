@@ -69,14 +69,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Lang.cs" />
-    <Compile Include="Assets\PopupPauseLetsJam.cs" />
-    <Compile Include="Assets\Situacao.cs" />
-    <Compile Include="Assets\TestGui.cs" />
-    <Compile Include="Assets\codigoBotoesLetsJam\BotaoEject.cs" />
-    <Compile Include="Assets\codigoBotoesLetsJam\BotaoPause.cs" />
-    <Compile Include="Assets\codigoBotoesLetsJam\BotaoRewind.cs" />
-    <Compile Include="Assets\codigoBotoesLetsJam\BotaoSkip.cs" />
+    <Compile Include="Assets\MultiplasLinguagens\Lang.cs" />
+    <Compile Include="Assets\MultiplasLinguagens\MultiplasLinguagens.cs" />
+    <Compile Include="Assets\letsjam\BotaoEject.cs" />
+    <Compile Include="Assets\letsjam\BotaoPause.cs" />
+    <Compile Include="Assets\letsjam\BotaoPrevious.cs" />
+    <Compile Include="Assets\letsjam\BotaoRewind.cs" />
+    <Compile Include="Assets\letsjam\BotaoSkip.cs" />
+    <Compile Include="Assets\letsjam\PopupPauseLetsJam.cs" />
+    <Compile Include="Assets\letsjam\PopupTemCertezaQueQuerIrAoMainMenu.cs" />
+    <Compile Include="Assets\letsjam\RadioLetsJam.cs" />
+    <Compile Include="Assets\letsjam\botao_nao_voltar_menu_inicial.cs" />
+    <Compile Include="Assets\letsjam\playPopupPauseLetsJam.cs" />
+    <Compile Include="Assets\letsjam\stopPopupPauseLetsJam.cs" />
+    <Compile Include="Assets\modohougaii\FornecedorDeSituacoes.cs" />
+    <Compile Include="Assets\modohougaii\ModoHougaii.cs" />
+    <Compile Include="Assets\modohougaii\Situacao.cs" />
+    <Compile Include="Assets\modohougaii\botaoInicioLetsJam.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\MultiplasLinguagens\lang.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

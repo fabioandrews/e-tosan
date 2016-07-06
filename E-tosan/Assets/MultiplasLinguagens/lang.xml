@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<languages>
+    <English>
+         <string name="app_name">E-tosan</string>
+         <string name="continuar">Continue</string>
+        <string name="menu_principal">Main menu</string>
+      <string name="tem_certeza_que_quer_ir_ao_menu_principal">Are you sure you want to go to the main menu?</string>
+      <string name="sim">Yes</string>
+      <string name="nao">No</string>
+      <string name="pause">Pause</string>
+      <string name="formas_verbais">Verbal forms</string>
+     <string name="verbos">Verbs</string>
+     <string name="lugares">Places</string>
+    </English>
+ 
+    <Portugues>
+        <string name="app_name">E-tosan</string>
+        <string name="continuar">Continuar</string>
+        <string name="menu_principal">Menu principal</string>
+      <string name="tem_certeza_que_quer_ir_ao_menu_principal">Tem certeza que quer ir ao menu principal?</string>
+      <string name="sim">Sim</string>
+      <string name="pause">Pause</string>
+     <string name="formas_verbais">Formas verbais</string>
+     <string name="verbos">Verbos</string>
+     <string name="lugares">Lugares</string>
+    </Portugues>
+</languages>
