@@ -18,5 +18,12 @@ public class BotaoEject : MonoBehaviour {
         RadioLetsJam radioLetsJam = GameObject.Find("radioLetsJam").GetComponent<RadioLetsJam>();
         radioLetsJam.irParaPosicaoDeDesaparecer();
         radioLetsJam.stopCurrent();
+
+        nomeMusicaAtualRadioLetsJam nomeMusicaAtualRadioLetsJam = GameObject.Find("nomeMusicaAtualRadioLetsJam").GetComponent<nomeMusicaAtualRadioLetsJam>();
+        nomeMusicaAtualRadioLetsJam.irParaPosicaoDeDesaparecer();
+
+        traducaoMusicaAtualLetsJam traducaoMusicaAtualRadioLetsJam = GameObject.Find("traducaoMusicaAtualRadioLetsJam").GetComponent<traducaoMusicaAtualLetsJam>();
+        traducaoMusicaAtualRadioLetsJam.irParaPosicaoDeDesaparecer();
+
     }
 }

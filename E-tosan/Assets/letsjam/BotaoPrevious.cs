@@ -18,5 +18,7 @@ public class BotaoPrevious : MonoBehaviour {
         RadioLetsJam radioLetsJam = GameObject.Find("radioLetsJam").GetComponent<RadioLetsJam>();
         radioLetsJam.Seek(RadioLetsJam.SeekDirection.Backward);
         radioLetsJam.PlayCurrent();
+
+
     }
 }

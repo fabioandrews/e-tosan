@@ -6,9 +6,8 @@ using UnityEngine.UI;
 
 public class MultiplasLinguagens : MonoBehaviour
 {
-
     //coisas necessarias para dar suporte a multiplas linguagens
-    private Lang LMan;
+    private static Lang LMan;
     private string currentLang = "English"; //linguagem padrao do aplicativo
 
     public void OnEnable()
@@ -30,7 +29,6 @@ public class MultiplasLinguagens : MonoBehaviour
         LMan = new Lang(Path.Combine(Application.dataPath, "MultiplasLinguagens/lang.xml"), currentLang, false);
     }
 
-    // Use this for initialization
     void Start()
     {
         if (UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().name == "modohougaii")
@@ -45,6 +43,12 @@ public class MultiplasLinguagens : MonoBehaviour
 
     }
 
+    public static string pegarTextoDaTag(string tagParaBuscarEmLangxml)
+    {
+        string texto = LMan.getString(tagParaBuscarEmLangxml);
+        return texto;
+    }
+
     private void mudarTextoCenamodohougaii()
     {
         string continuar = LMan.getString("continuar"); //pegar do xml o texto com a tag "continuar"  
@@ -52,7 +56,7 @@ public class MultiplasLinguagens : MonoBehaviour
         Text textoContinuar = gameObjectContinuar.GetComponent<Text>();
         textoContinuar.text = continuar;
 
-        string menu_principal = LMan.getString("menu_principal"); 
+        string menu_principal = LMan.getString("menu_principal");
         GameObject gameObjectmenuprincipal = GameObject.Find("menu principal");
         Text textomenu_principal = gameObjectmenuprincipal.GetComponent<Text>();
         textomenu_principal.text = menu_principal;
@@ -83,15 +87,16 @@ public class MultiplasLinguagens : MonoBehaviour
         textoverbos.text = verbos;
 
         string formas_verbais = LMan.getString("formas_verbais");
-        GameObject objetoformas_verbais= GameObject.Find("formas_verbais");
+        GameObject objetoformas_verbais = GameObject.Find("formas_verbais");
         Text textformas_verbais = objetoformas_verbais.GetComponent<Text>();
         textformas_verbais.text = formas_verbais;
 
         string lugares = LMan.getString("lugares");
-        GameObject objetolugares= GameObject.Find("lugares");
+        GameObject objetolugares = GameObject.Find("lugares");
         Text textlugares = objetolugares.GetComponent<Text>();
         textlugares.text = lugares;
 
 
     }
 }
+

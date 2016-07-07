@@ -1,5 +1,4 @@
-﻿
-/*
+﻿/*
 The Lang Class adds easy to use multiple language support to any Unity project by parsing an XML file
 containing numerous strings translated into any languages of your choice.  Refer to UMLS_Help.html and lang.xml
 for more information.
@@ -64,13 +63,13 @@ public class Lang
         xml.Load(path);
 
         Strings = new Hashtable();
-        var element = xml.DocumentElement[language];
+        XmlElement element = xml.DocumentElement[language];
         if (element != null)
         {
-            var elemEnum = element.GetEnumerator();
+            IEnumerator elemEnum = element.GetEnumerator();
             while (elemEnum.MoveNext())
             {
-                var xmlItem = (XmlElement)elemEnum.Current;
+                XmlElement xmlItem = (XmlElement)elemEnum.Current;
                 Strings.Add(xmlItem.GetAttribute("name"), xmlItem.InnerText);
             }
         }

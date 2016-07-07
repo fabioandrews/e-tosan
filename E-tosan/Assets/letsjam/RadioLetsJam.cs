@@ -3,6 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEngine.UI;
+
+/*
+ * Como usar o radio: Basta ter um objeto com esse script(aconselho o objeto empty que engloba todos os componentes do radio)
+ * e em alguma classe(tipo uma classe de um botão que deveria ser apertado para abrir o radio), faça:
+ * RadioLetsJam radioLetsJam = GameObject.Find("radioLetsJam").GetComponent<RadioLetsJam>();
+        radioLetsJam.voltarAPosicaoInicial();
+        string[] arquivosDoRadio = new string[] { "hougaii.wav" }; //aqui devem estar os nomes de todos os arquivos que o raido deve passar
+
+        radioLetsJam.setarArquivosDoRadio(arquivosDoRadio, "Assets/modohougaii/audiosModoHougaii/letsjam");
+        radioLetsJam.PlayCurrent(); //para playar a musica 1 dessa lista de musicas
+ */
 
 public class RadioLetsJam : MonoBehaviour
 {
@@ -23,7 +35,7 @@ public class RadioLetsJam : MonoBehaviour
     private string[] nomesArquivosDoRadio; //quais sao os nomes dos arquivos que deveriam fazer parte do radio atualmente? Ex: formas_verbais_hougaii
     Vector3 posicaoInicial;
 
-    private bool terminouDeCarregarClips; //variavel que fica false quando sistema comeca a preencher a variavel clips e fica true quando clips ja esta prontinho
+   private int quantosClipsForamLoaded; //variavel que vai sendo aumentada a medida que loadFile() vai terminando. Serve para eu esperar ate as corotinas acabarem
 
     // Use this for initialization
     void Start()
@@ -52,9 +64,17 @@ public class RadioLetsJam : MonoBehaviour
         ReloadSounds();
     }
 
-    public bool getTerminouDeCarregarClips()
+    //funcao para checar se todos os arquivos de audio ja foram carregados(preciso dele pq carregar arquivos de audio eh feito em corotinas)
+    public bool terminouDeCarregarClips()
     {
-        return terminouDeCarregarClips;
+        if (quantosClipsForamLoaded == this.clips.Count)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public int tamanhoClips()
@@ -99,6 +119,32 @@ public class RadioLetsJam : MonoBehaviour
     {
         source.clip = clips[currentIndex];
         source.Play();
+        this.mudarNomeMusicaAtualRadioLetsJam();
+        this.mudarTraducaoMusicaAtualRadioLetsJam();
+    }
+
+    private void mudarNomeMusicaAtualRadioLetsJam()
+    {
+        string nomeMusicaAtualComWav = source.clip.name;
+        string oQueDesejoRemover = ".wav";
+        string nomeMusicaAtual = nomeMusicaAtualComWav.Remove(nomeMusicaAtualComWav.IndexOf(oQueDesejoRemover), oQueDesejoRemover.Length);
+
+        Text nomeMusicaAtualRadioLetsJam = GameObject.Find("nomeMusicaAtualRadioLetsJam").GetComponent<Text>();
+        nomeMusicaAtualRadioLetsJam.text = nomeMusicaAtual;
+    }
+
+    private void mudarTraducaoMusicaAtualRadioLetsJam()
+    {
+        string nomeMusicaAtualComWav = source.clip.name;
+        string oQueDesejoRemover = ".wav";
+        string nomeMusicaAtual = nomeMusicaAtualComWav.Remove(nomeMusicaAtualComWav.IndexOf(oQueDesejoRemover), oQueDesejoRemover.Length);
+
+        //basta usar o nome da musica atual + "_traducao"
+        string tagParaBuscarEmLangXml = nomeMusicaAtual + "_traducao";
+        string traducao = MultiplasLinguagens.pegarTextoDaTag(tagParaBuscarEmLangXml); //pegar do xml o texto com a tag "continuar"  
+
+        Text traducaoMusicaAtualRadioLetsJam = GameObject.Find("traducaoMusicaAtualRadioLetsJam").GetComponent<Text>();
+        traducaoMusicaAtualRadioLetsJam.text = traducao;
     }
 
     public void stopCurrent()
@@ -118,7 +164,7 @@ public class RadioLetsJam : MonoBehaviour
 
     void ReloadSounds()
     {
-        terminouDeCarregarClips = false; //vamos passar para a fase de carregando clips
+        this.quantosClipsForamLoaded = 0; //vamos passar para a fase de carregando clips
         clips.Clear();
         soundFiles = new LinkedList<FileInfo>();
         // get all valid files
@@ -137,13 +183,11 @@ public class RadioLetsJam : MonoBehaviour
             .Where(f => IsValidFileType(f.Name))
             .ToArray();*/
         // and load them && nomeArquivoEstaPresenteEmArquivosDoRadio(f.Name)
+
         foreach (var s in soundFiles)
         {
             StartCoroutine(LoadFile(s.FullName));
         }
-
-        terminouDeCarregarClips = true;
-        PlayCurrent();
     }
 
     private bool nomeArquivoEstaPresenteEmArquivosDoRadio(string nomeDeUmArquivo)
@@ -178,5 +222,8 @@ public class RadioLetsJam : MonoBehaviour
         clip.name = Path.GetFileName(path);
         clips.Add(clip);
         Debug.Log("tamanho de clips:" + clips.Count);
+
+        this.quantosClipsForamLoaded = this.quantosClipsForamLoaded + 1;
+
     }
 }

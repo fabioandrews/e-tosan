@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 public class botaoInicioLetsJam : MonoBehaviour
 {
@@ -21,19 +23,90 @@ public class botaoInicioLetsJam : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (tipo_de_botao == "formas_verbais")
-        {
-        }
-        else if (tipo_de_botao == "verbos")
-        {
-        }
-        else if (tipo_de_botao == "lugares")
-        {
-        }
+        ModoHougaii modoHougaii = GameObject.Find("Main Camera").GetComponent<ModoHougaii>();
+        LinkedList<SituacaoModoHougaii> quatroSituacoesAtuais = modoHougaii.getquatroSituacoesAtuais();
+        string[] nomesArquivosParaRadio = pegarNomesArquivosDeAudioParaRadio(this.tipo_de_botao, quatroSituacoesAtuais);
+        
         RadioLetsJam radioLetsJam = GameObject.Find("radioLetsJam").GetComponent<RadioLetsJam>();
         radioLetsJam.voltarAPosicaoInicial();
-        string[] arquivosDoRadio = new string[] { "hougaii.wav" };
+        radioLetsJam.setarArquivosDoRadio(nomesArquivosParaRadio, "Assets/modohougaii/audiosModoHougaii/letsjam");
 
-        radioLetsJam.setarArquivosDoRadio(arquivosDoRadio, "Assets/modohougaii/audiosModoHougaii/letsjam");
+        while (radioLetsJam.terminouDeCarregarClips() == false)
+        {
+            System.Threading.Thread.Sleep(500);
+        }
+
+        radioLetsJam.PlayCurrent(); //para playar a musica 1 dessa lista de musicas
+
+        nomeMusicaAtualRadioLetsJam nomeMusicaAtualRadioLetsJam = GameObject.Find("nomeMusicaAtualRadioLetsJam").GetComponent<nomeMusicaAtualRadioLetsJam>();
+        nomeMusicaAtualRadioLetsJam.voltarAPosicaoInicial(); //faz o texto coma musica atual aparecer tb!
+
+        traducaoMusicaAtualLetsJam traducaoMusicaAtualRadioLetsJam = GameObject.Find("traducaoMusicaAtualRadioLetsJam").GetComponent<traducaoMusicaAtualLetsJam>();
+        traducaoMusicaAtualRadioLetsJam.voltarAPosicaoInicial(); //faz o texto com a traducao da musica atual aparecer tb!
+    }
+
+    //vou extrair todos os arquivos de audio necessarios dentro das quatro situacoes atuais
+    //e apenas para exercitar verbos, lugares ou formas verbais
+    //esse atributo formas_verbaisVerbosOuLugares pode ser "formas_verbais", "verbos" ou "lugares"
+    //tudo bem se uma situacao nao tiver tempos verbais ou lugares...eu checo isso antes de incluir na lista
+    private string[] pegarNomesArquivosDeAudioParaRadio(string formas_verbaisVerbosOuLugares, LinkedList<SituacaoModoHougaii> quatroSituacoesAtuais)
+    {
+        LinkedList<string> arquivosDeAudioLinkedList = new LinkedList<string>();
+        LinkedListNode<SituacaoModoHougaii> percorredorLista = quatroSituacoesAtuais.First;
+        while (percorredorLista != null && percorredorLista.Value != null)
+        {
+            SituacaoModoHougaii umaSituacao = percorredorLista.Value;
+
+            if (formas_verbaisVerbosOuLugares.CompareTo("formas_verbais") == 0)
+            {
+                LinkedList<string> temposVerbaisEstudados = umaSituacao.gettemposVerbaisEstudados();
+                if (temposVerbaisEstudados != null && temposVerbaisEstudados.Count > 0)
+                {
+                    //existem tempos verbais nessa situacao
+                    LinkedListNode<string> percorredorTemposVerbais = temposVerbaisEstudados.First;
+                    while (percorredorTemposVerbais != null && percorredorTemposVerbais.Value != null)
+                    {
+                        arquivosDeAudioLinkedList.AddLast(percorredorTemposVerbais.Value + ".wav");
+                        percorredorTemposVerbais = percorredorTemposVerbais.Next;
+                    }
+                }
+            }
+            else if (formas_verbaisVerbosOuLugares.CompareTo("verbos") == 0)
+            {
+                string verbo = umaSituacao.getverbo();
+                if (verbo != null && verbo.Length > 0)
+                {
+                    arquivosDeAudioLinkedList.AddLast(verbo + ".wav");
+                }
+            }
+            else if (formas_verbaisVerbosOuLugares.CompareTo("lugares") == 0)
+            {
+                string lugar = umaSituacao.getlugar();
+                if (lugar != null && lugar.Length > 0)
+                {
+                    arquivosDeAudioLinkedList.AddLast(lugar + ".wav");
+                }
+            }
+
+            percorredorLista = percorredorLista.Next;
+        }
+
+        //vamos remover elementos repetidos da lista
+        List<string> arquivosDeAudioLinkedListSemRepeticoesList = arquivosDeAudioLinkedList.Distinct().ToList();
+        LinkedList<string> arquivosDeAudioLinkedListSemRepeticoes = new LinkedList<string>(arquivosDeAudioLinkedListSemRepeticoesList);
+
+
+        //agora so falta transformar linkedlist em array
+        string[] arquivosDeAudio = new string[arquivosDeAudioLinkedListSemRepeticoes.Count];
+        int percorredorArquivosDeAudio = 0;
+        LinkedListNode<string> percorredorarquivosDeAudioLinkedListSemRepeticoes = arquivosDeAudioLinkedListSemRepeticoes.First;
+        while (percorredorarquivosDeAudioLinkedListSemRepeticoes != null && percorredorarquivosDeAudioLinkedListSemRepeticoes.Value != null)
+        {
+            arquivosDeAudio[percorredorArquivosDeAudio] = percorredorarquivosDeAudioLinkedListSemRepeticoes.Value;
+            percorredorarquivosDeAudioLinkedListSemRepeticoes = percorredorarquivosDeAudioLinkedListSemRepeticoes.Next;
+            percorredorArquivosDeAudio = percorredorArquivosDeAudio + 1;
+        }
+
+        return arquivosDeAudio;
     }
 }

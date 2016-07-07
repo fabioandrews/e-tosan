@@ -11,6 +11,26 @@
       <string name="formas_verbais">Verbal forms</string>
      <string name="verbos">Verbs</string>
      <string name="lugares">Places</string>
+    
+      
+     <string name="～たいです_traducao">I want to... (verb)</string>
+     <string name="～てはいけません_traducao">It's forbidden to... (verb)</string>
+     <string name="～ほうがいい_traducao">It's better to... (verb)</string>
+     <string name="～ないほうがいい_traducao">It's better not to... (verb)</string>
+     <string name="およぐ_traducao">To swim</string>
+     <string name="プール_traducao">Pool</string>
+     <string name="あそぶ_traducao">To play</string>
+    <string name="えいがかん_traducao">Movie theater</string>
+    <string name="うたう_traducao">To sing</string>
+    <string name="きょうしつ_traducao">Classroom</string>
+    <string name="～のがすきです_traducao">I like to... (verb)</string>
+    <string name="～てもいいです_traducao">It's okay to... (verb)</string>
+    <string name="きく_traducao">To listen</string>
+    <string name="いえ_traducao">House</string>
+    <string name="あるく_traducao">To walk</string>
+    <string name="こうえん_traducao">Park</string>
+    <string name="さんぽする_traducao">To take a walk</string>
+    <string name="みち_traducao">Street</string>
     </English>
  
     <Portugues>
@@ -23,5 +43,25 @@
      <string name="formas_verbais">Formas verbais</string>
      <string name="verbos">Verbos</string>
      <string name="lugares">Lugares</string>
+    
+      
+     <string name="～たいです_traducao">Eu quero fazer... (verbo)</string>
+     <string name="～てはいけません_traducao">Não é permitido... (verbo)</string>
+     <string name="～ほうがいい_traducao">É melhor... (verbo)</string>
+     <string name="～ないほうがいい_traducao">É melhor não... (verbo)</string>
+     <string name="およぐ_traducao">Nadar</string>
+     <string name="プール_traducao">Piscina</string>
+     <string name="あそぶ_traducao">Brincar</string>
+    <string name="えいがかん_traducao">Cinema</string>
+    <string name="うたう_traducao">Cantar</string>
+    <string name="きょうしつ_traducao">Sala de aula</string>
+    <string name="～のがすきです_traducao">Eu gosto de... (verbo)</string>
+    <string name="～てもいいです_traducao">É permitido... (verbo)</string>
+    <string name="きく_traducao">Ouvir</string>
+    <string name="いえ_traducao">Casa</string>
+    <string name="あるく_traducao">Caminhar</string>
+    <string name="こうえん_traducao">Parque</string>
+    <string name="さんぽする_traducao">Dar um passeio</string>
+    <string name="みち_traducao">Rua</string>
     </Portugues>
 </languages>

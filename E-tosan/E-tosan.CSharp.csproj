@@ -80,11 +80,13 @@
     <Compile Include="Assets\letsjam\PopupTemCertezaQueQuerIrAoMainMenu.cs" />
     <Compile Include="Assets\letsjam\RadioLetsJam.cs" />
     <Compile Include="Assets\letsjam\botao_nao_voltar_menu_inicial.cs" />
+    <Compile Include="Assets\letsjam\nomeMusicaAtualRadioLetsJam.cs" />
     <Compile Include="Assets\letsjam\playPopupPauseLetsJam.cs" />
     <Compile Include="Assets\letsjam\stopPopupPauseLetsJam.cs" />
+    <Compile Include="Assets\letsjam\traducaoMusicaAtualLetsJam.cs" />
     <Compile Include="Assets\modohougaii\FornecedorDeSituacoes.cs" />
     <Compile Include="Assets\modohougaii\ModoHougaii.cs" />
-    <Compile Include="Assets\modohougaii\Situacao.cs" />
+    <Compile Include="Assets\modohougaii\SituacaoModoHougaii.cs" />
     <Compile Include="Assets\modohougaii\botaoInicioLetsJam.cs" />
   </ItemGroup>
   <ItemGroup>
