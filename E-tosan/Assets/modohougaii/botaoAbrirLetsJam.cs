@@ -20,9 +20,11 @@ public class botaoAbrirLetsJam : MonoBehaviour {
         instanciainicioLetsJamComTipoReal.voltarAPosicaoInicial();
 
         GameObject telaSituacaoModoHougaii = GameObject.Find("telaSituacaoHougaii");
-        TelaSituacaoHougaii telaSituacaoHougaiiComTipoReal = telaSituacaoModoHougaii.GetComponent<TelaSituacaoHougaii>(); ;
+        TelaSituacaoHougaii telaSituacaoHougaiiComTipoReal = telaSituacaoModoHougaii.GetComponent<TelaSituacaoHougaii>();
         telaSituacaoHougaiiComTipoReal.setUsuarioEstaDentroDeLetsJam(true);
 
+        PopupWindowBehavior telaSituacaoHougaiiComTipoPopupWindow = telaSituacaoModoHougaii.GetComponent<PopupWindowBehavior>();
+        telaSituacaoHougaiiComTipoPopupWindow.irParaPosicaoDeDesaparecer();
 
     }
 }

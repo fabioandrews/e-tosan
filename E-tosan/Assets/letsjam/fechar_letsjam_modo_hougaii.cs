@@ -16,7 +16,11 @@ public class fechar_letsjam_modo_hougaii : MonoBehaviour {
     void OnMouseDown()
     {
         GameObject telaSituacaoModoHougaii = GameObject.Find("telaSituacaoHougaii");
-        TelaSituacaoHougaii telaSituacaoHougaiiComTipoReal = telaSituacaoModoHougaii.GetComponent<TelaSituacaoHougaii>(); ;
+        TelaSituacaoHougaii telaSituacaoHougaiiComTipoReal = telaSituacaoModoHougaii.GetComponent<TelaSituacaoHougaii>();
         telaSituacaoHougaiiComTipoReal.setUsuarioEstaDentroDeLetsJam(false);
+
+        //FALTOU FAZER A TELA DA SITUACAO REAPARECER
+        PopupWindowBehavior telaSituacaoHougaiiComTipoJanelaPopup = telaSituacaoModoHougaii.GetComponent<PopupWindowBehavior>();
+        telaSituacaoHougaiiComTipoJanelaPopup.voltarAPosicaoInicial();
     }
 }

@@ -89,6 +89,7 @@
     <Compile Include="Assets\modohougaii\TelaSituacaoHougaii.cs" />
     <Compile Include="Assets\modohougaii\botaoAbrirLetsJam.cs" />
     <Compile Include="Assets\modohougaii\botaoInicioLetsJam.cs" />
+    <Compile Include="Assets\modohougaii\botaoRecomecarAudioSituacaoAtual.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\MultiplasLinguagens\lang.xml" />

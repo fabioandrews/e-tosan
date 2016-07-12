@@ -13,13 +13,22 @@ public class PopupWindowBehavior : MonoBehaviour {
         {
             child.GetComponent<Renderer>().enabled = false;
         }*/
-        posicaoInicial = transform.localPosition;
+
+        //posicaoInicial = transform.localPosition;
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    //essa funcao serah chamada pelo script que fica na sua Main Camera antes da primeira execucao de irParaPosicaoDeDesaparecer()
+    //senao nao tem como obter posicaoInicial
+    public void obterPosicaoInicial()
+    {
+        posicaoInicial = transform.localPosition;
+        //nao podia fazer isso no Start()? Nao! Pq nao sabemos quando Start() sera executado para todas as janelas
     }
 
     public void voltarAPosicaoInicial()

@@ -107,6 +107,11 @@ public class RadioLetsJam : MonoBehaviour
 
     public void PlayCurrent()
     {
+        while (this.terminouDeCarregarClips() == false)
+        {
+            System.Threading.Thread.Sleep(500);
+        }
+
         source.clip = clips[currentIndex];
         source.Play();
         this.mudarNomeMusicaAtualRadioLetsJam();

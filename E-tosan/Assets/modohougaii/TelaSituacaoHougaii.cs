@@ -13,11 +13,13 @@ public class TelaSituacaoHougaii : MonoBehaviour
     private string arquivoDeAudioQueEstaTocandoAgoraEhmelodyOUregras; //pode ser "melody" ou "regras"
     private LinkedList<FileInfo> soundFiles; //necessario para quando for carregar arquivos de audio do diretorio
 
+    public Sprite sprite_para_figura_central_melody;
+    public Sprite sprite_para_figura_central_regras;
+
     // Use this for initialization
     void Start ()
     {
-        arquivoAudioSituacaoAtualMelody = gameObject.AddComponent<AudioSource>();
-        arquivoAudioSituacaoAtualRegras = gameObject.AddComponent<AudioSource>();
+
     }
 	
 	// Update is called once per frame
@@ -46,6 +48,7 @@ public class TelaSituacaoHougaii : MonoBehaviour
         else
         {
             //hora de continuar o arquivo de audio da melody/regras ou comecar
+
             if (this.arquivoAudioSituacaoAtualMelody.isPlaying == false && this.arquivoAudioSituacaoAtualRegras.isPlaying == false)
             {
                 this.comecarArquivoDeAudioDaMelodyEMudarFiguraCentral();
@@ -87,13 +90,14 @@ public class TelaSituacaoHougaii : MonoBehaviour
         GameObject modoHougaii = GameObject.Find("Main Camera");
         ModoHougaii modoHougaiiComTipoReal = modoHougaii.GetComponent<ModoHougaii>(); ;
 
-        string ondeEstaoOsArquivosDeAudioDeSituacoesDoLetsJam =
-            modoHougaiiComTipoReal.getondeEstaoOsArquivosDeAudioDeSituacoesDoLetsJam();
+        string ondeEstaoOsArquivosDeAudioDeSituacoes=
+            modoHougaiiComTipoReal.getondeEstaoOsArquivosDeAudioDeSituacoes();
 
         soundFiles = new LinkedList<FileInfo>();
         // get all valid files
-        var info = new DirectoryInfo(ondeEstaoOsArquivosDeAudioDeSituacoesDoLetsJam);
+        var info = new DirectoryInfo(ondeEstaoOsArquivosDeAudioDeSituacoes);
         FileInfo[] fileInfos = info.GetFiles();
+
         for (int i = 0; i < fileInfos.Length; i++)
         {
             FileInfo umFileInfo = fileInfos[i];
@@ -105,8 +109,20 @@ public class TelaSituacaoHougaii : MonoBehaviour
         }
 
 
-        StartCoroutine(LoadFile(ondeEstaoOsArquivosDeAudioDeSituacoesDoLetsJam + "/" + this.situacaoAtual.getnomeArquivoWavMelody(),"melody"));
-        StartCoroutine(LoadFile(ondeEstaoOsArquivosDeAudioDeSituacoesDoLetsJam + "/" + this.situacaoAtual.getnomeArquivoWavRegras(), "regras"));
+        foreach (var s in soundFiles)
+        {
+            if (s.Name.Contains("melody") == true)
+            {
+                StartCoroutine(LoadFile(s.FullName, "melody"));
+            }
+            else if (s.Name.Contains("regras") == true)
+            {
+                StartCoroutine(LoadFile(s.FullName, "regras"));
+            }
+        }
+
+        //StartCoroutine(LoadFile(ondeEstaoOsArquivosDeAudioDeSituacoesDoLetsJam + "/" + this.situacaoAtual.getnomeArquivoWavMelody(),"melody"));
+        //StartCoroutine(LoadFile(ondeEstaoOsArquivosDeAudioDeSituacoesDoLetsJam + "/" + this.situacaoAtual.getnomeArquivoWavRegras(), "regras"));
 
     }
 
@@ -125,12 +141,22 @@ public class TelaSituacaoHougaii : MonoBehaviour
 
         if (melodyOuRegras.CompareTo("melody") == 0)
         {
+            if (this.arquivoAudioSituacaoAtualMelody == null)
+            {
+                this.arquivoAudioSituacaoAtualMelody = gameObject.AddComponent<AudioSource>();
+            }
             this.arquivoAudioSituacaoAtualMelody.clip = clip;
         }
         else
         {
+            if (this.arquivoAudioSituacaoAtualRegras == null)
+            {
+                this.arquivoAudioSituacaoAtualRegras = gameObject.AddComponent<AudioSource>();
+            }
+
             this.arquivoAudioSituacaoAtualRegras.clip = clip;
         }
+        
     }
     
 
@@ -139,6 +165,11 @@ public class TelaSituacaoHougaii : MonoBehaviour
         //hora de comecar algum arquivo de audio: o da melody
         this.arquivoAudioSituacaoAtualMelody.Play();
         arquivoDeAudioQueEstaTocandoAgoraEhmelodyOUregras = "melody";
+
+        //mudar figura central
+        SpriteRenderer spriteRendererFiguraCentral =
+            GameObject.Find("figuraCentralSituacaoAtualHougaii").GetComponent<SpriteRenderer>(); // we are accessing the SpriteRenderer that is attached to the Gameobject
+        spriteRendererFiguraCentral.sprite = this.sprite_para_figura_central_melody;
 
         StartCoroutine(esperarSituacaoMelodyTerminarParaDarPlayNaSituacaoRegras());
         //inicio uma thread para assim que o arquivo de audio com a fala da melody parar, o da regras comecar
@@ -149,5 +180,56 @@ public class TelaSituacaoHougaii : MonoBehaviour
         //hora de comecar o outro audio!
         this.arquivoAudioSituacaoAtualRegras.Play();
         arquivoDeAudioQueEstaTocandoAgoraEhmelodyOUregras = "regras";
+
+        //mudar figura central
+        SpriteRenderer spriteRendererFiguraCentral =
+            GameObject.Find("figuraCentralSituacaoAtualHougaii").GetComponent<SpriteRenderer>(); // we are accessing the SpriteRenderer that is attached to the Gameobject
+        spriteRendererFiguraCentral.sprite = this.sprite_para_figura_central_regras;
+
+        //falta comecar a corotina que passa para a proxima tela assim que acaba esse contador
+        StartCoroutine(esperarSituacaoRegrasTerminarParaPassarParaProximaTela());
     }
+
+    public void recomecarAudioSituacaoAtual()
+    {
+
+        if (this.arquivoAudioSituacaoAtualRegras.isPlaying == true)
+        {
+            //significa que o usuario apertou o botao de recomecar o audio durante o audio de regras. entao devemos 
+            //alem de botar Play() no audio da melody, comecar a corotina do audio das regras
+            this.arquivoAudioSituacaoAtualRegras.Stop();
+            comecarArquivoDeAudioDaMelodyEMudarFiguraCentral();
+        }
+        else
+        {
+            //significa que o usuario apertou o botao de recomecar audio durante o audio da melody. entao devemos
+            //apenas reiniciar o arquivo de audio e parar o audio das regras. 
+            //Nao precisa reiniciar a corotina que espera o audio acabar, nem
+            //alterar booleano arquivoDeAudioQueEstaTocandoAgoraEhmelodyOUregras e nem mudar a figura central
+            this.arquivoAudioSituacaoAtualMelody.Play();
+        }
+    }
+
+    //assim que o arquivo de audio com a fala da melody parar, o da regras deve comecar
+    IEnumerator esperarSituacaoRegrasTerminarParaPassarParaProximaTela()
+    {
+        while (this.usuarioEstaDentroDeLetsJam == true ||
+                (this.usuarioEstaDentroDeLetsJam == false && (this.arquivoAudioSituacaoAtualRegras.isPlaying == true || this.arquivoAudioSituacaoAtualMelody.isPlaying == true)))
+        {
+            yield return new WaitForSeconds(.1f);
+        }
+
+        this.passarParaProximaTela();
+    }
+
+    private void passarParaProximaTela()
+    {
+        //desaparecer a tela atual...
+        PopupWindowBehavior telaSituacaoHougaii = GameObject.Find("telaSituacaoHougaii").GetComponent<PopupWindowBehavior>();
+        telaSituacaoHougaii.irParaPosicaoDeDesaparecer();
+
+        //aparecer proxima tela
+        PopupWindowBehavior telaEscolhaEtosanHougaii = GameObject.Find("telaEscolhaEtosanHougaii").GetComponent<PopupWindowBehavior>();
+        telaEscolhaEtosanHougaii.voltarAPosicaoInicial();
+    } 
 }

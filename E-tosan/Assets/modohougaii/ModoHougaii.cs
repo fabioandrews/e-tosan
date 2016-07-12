@@ -18,7 +18,7 @@ public class ModoHougaii : MonoBehaviour
     private string fecharLetsJamDeveVoltarAQualTela; //pode ser situacaoAtual, pode ser a tela onde o usuario escolhe a resposta correta ou pode ser 
     private int turnoDeQuatroSituacoesAtual; //de 4 em 4 situacoes esse valor aumenta
     private string ondeEstaoOsArquivosDeAudioDoLetsJam = "Assets/modohougaii/audiosModoHougaii/letsjam"; //esse atributo eh usado pelo botaoInicioLetsJam
-    private string ondeEstaoOsArquivosDeAudioDeSituacoesDoLetsJam = "Assets/modohougaii/audiosModoHougaii/situacao"; //usado por TelaSituacaoHougaii
+    private string ondeEstaoOsArquivosDeAudioDeSituacoes = "Assets/modohougaii/audiosModoHougaii/situacao"; //usado por TelaSituacaoHougaii
 
     // Use this for initialization
     void Start ()
@@ -29,13 +29,15 @@ public class ModoHougaii : MonoBehaviour
         this.turnoDeQuatroSituacoesAtual = 0;
         this.quatroSituacoesAtuais = new LinkedList<SituacaoModoHougaii>();
 
-        //this.definirNovaSituacaoAtualTelaHougaii(); EH O NORMAL! SOH ESTOU TESTANDO COM OS METODOS ABAIXO PARA VER SE LETS JAM AINDA FUNCIONA!
-        obterQuatroSituacoesAtuais();
-
 
         this.tornarTodosOsPopupsDestaCenaInvisiveis();
 
-        this.fazerPopupLetsJamAparecer();
+        /*//SE QUISER MOSTRAR AO PROF APENAS O RAIDO DO LETSJAM FUNCIONANDO, 
+          //BASTA DESCOMENTAR ISSO E COMENTAR TUDO QUE VIER DEPOIS NESTE START()
+         * obterQuatroSituacoesAtuais();
+          this.fazerPopupLetsJamAparecer(); */
+
+        this.definirNovaSituacaoAtualTelaHougaii();
     }
 	
 	// Update is called once per frame
@@ -48,9 +50,9 @@ public class ModoHougaii : MonoBehaviour
         return ondeEstaoOsArquivosDeAudioDoLetsJam;
     }
 
-    public string getondeEstaoOsArquivosDeAudioDeSituacoesDoLetsJam()
+    public string getondeEstaoOsArquivosDeAudioDeSituacoes()
     {
-        return ondeEstaoOsArquivosDeAudioDeSituacoesDoLetsJam;
+        return ondeEstaoOsArquivosDeAudioDeSituacoes;
     }
 
     private void obterQuatroSituacoesAtuais()
@@ -153,7 +155,7 @@ public class ModoHougaii : MonoBehaviour
                 telaSituacaoHougaiiComTipoReal.setarSituacaoAtualESeuArquivoDeAudio(situacaoVouRemover);
                 telaSituacaoHougaiiComTipoReal.setUsuarioEstaDentroDeLetsJam(true);
 
-                this.fazerTelaSituacaoHougaiiAparecer();
+                //this.fazerTelaSituacaoHougaiiAparecer();
                 this.fazerPopupLetsJamAparecer();
             }
         }
@@ -162,24 +164,35 @@ public class ModoHougaii : MonoBehaviour
     private void tornarTodosOsPopupsDestaCenaInvisiveis()
     {
         PopupWindowBehavior instanciaSituacaoHougaii = GameObject.Find("telaSituacaoHougaii").GetComponent<PopupWindowBehavior>();
+        instanciaSituacaoHougaii.obterPosicaoInicial();
         instanciaSituacaoHougaii.irParaPosicaoDeDesaparecer();
 
-        PopupWindowBehavior inicioLetsJam = GameObject.Find("inicioLetsJam").GetComponent<PopupWindowBehavior>(); 
+        PopupWindowBehavior inicioLetsJam = GameObject.Find("inicioLetsJam").GetComponent<PopupWindowBehavior>();
+        inicioLetsJam.obterPosicaoInicial();
         inicioLetsJam.irParaPosicaoDeDesaparecer();
 
         PopupWindowBehavior radioLetsJam = GameObject.Find("radioLetsJam").GetComponent<PopupWindowBehavior>();
+        radioLetsJam.obterPosicaoInicial();
         radioLetsJam.irParaPosicaoDeDesaparecer();
 
         PopupWindowBehavior nomeMusicaAtualRadioLetsJam = GameObject.Find("nomeMusicaAtualRadioLetsJam").GetComponent<PopupWindowBehavior>();
+        nomeMusicaAtualRadioLetsJam.obterPosicaoInicial();
         nomeMusicaAtualRadioLetsJam.irParaPosicaoDeDesaparecer();
         PopupWindowBehavior traducaoMusicaAtualRadioLetsJam = GameObject.Find("traducaoMusicaAtualRadioLetsJam").GetComponent<PopupWindowBehavior>();
+        traducaoMusicaAtualRadioLetsJam.obterPosicaoInicial();
         traducaoMusicaAtualRadioLetsJam.irParaPosicaoDeDesaparecer();
 
         PopupWindowBehavior PopupPauseLetsJam = GameObject.Find("PopupPauseLetsJam").GetComponent<PopupWindowBehavior>();
+        PopupPauseLetsJam.obterPosicaoInicial();
         PopupPauseLetsJam.irParaPosicaoDeDesaparecer();
 
         PopupWindowBehavior PopupTemCertezaQueQuerIrAoMainMenu = GameObject.Find("PopupTemCertezaQueQuerIrAoMainMenu").GetComponent<PopupWindowBehavior>();
+        PopupTemCertezaQueQuerIrAoMainMenu.obterPosicaoInicial();
         PopupTemCertezaQueQuerIrAoMainMenu.irParaPosicaoDeDesaparecer();
+
+        PopupWindowBehavior telaEscolhaEtosanHougaii = GameObject.Find("telaEscolhaEtosanHougaii").GetComponent<PopupWindowBehavior>();
+        telaEscolhaEtosanHougaii.obterPosicaoInicial();
+        telaEscolhaEtosanHougaii.irParaPosicaoDeDesaparecer();
 
     }
 

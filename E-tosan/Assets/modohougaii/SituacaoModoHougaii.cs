@@ -24,7 +24,7 @@ public class SituacaoModoHougaii
         this.verbo = verbo;
         this.lugar = lugar;
         this.nomeArquivoWavMelody = id + "_melody.wav";
-        this.nomeArquivoWavRegras = id + "_ regras.wav";
+        this.nomeArquivoWavRegras = id + "_regras.wav";
         this.duasRespostasDoEtosan = duasRespostasDoEtosan;
         this.respostaCorretaAgradaMelody = respostaCorretaAgradaMelody;
         this.respostaCorretaDoEtosan = respostaCorretaDoEtosan;
