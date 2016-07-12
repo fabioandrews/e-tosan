@@ -28,8 +28,11 @@ public class botaoInicioLetsJam : MonoBehaviour
         string[] nomesArquivosParaRadio = pegarNomesArquivosDeAudioParaRadio(this.tipo_de_botao, quatroSituacoesAtuais);
         
         RadioLetsJam radioLetsJam = GameObject.Find("radioLetsJam").GetComponent<RadioLetsJam>();
-        radioLetsJam.voltarAPosicaoInicial();
-        radioLetsJam.setarArquivosDoRadio(nomesArquivosParaRadio, "Assets/modohougaii/audiosModoHougaii/letsjam");
+        PopupWindowBehavior radioLetsJamComoPopupWindow = GameObject.Find("radioLetsJam").GetComponent<PopupWindowBehavior>();
+        radioLetsJamComoPopupWindow.voltarAPosicaoInicial();
+
+        string ondeEstaoOsArquivosDeAudioDoLetsJam = modoHougaii.getondeEstaoOsArquivosDeAudioDoLetsJam();
+        radioLetsJam.setarArquivosDoRadio(nomesArquivosParaRadio, ondeEstaoOsArquivosDeAudioDoLetsJam);
 
         while (radioLetsJam.terminouDeCarregarClips() == false)
         {
@@ -38,10 +41,10 @@ public class botaoInicioLetsJam : MonoBehaviour
 
         radioLetsJam.PlayCurrent(); //para playar a musica 1 dessa lista de musicas
 
-        nomeMusicaAtualRadioLetsJam nomeMusicaAtualRadioLetsJam = GameObject.Find("nomeMusicaAtualRadioLetsJam").GetComponent<nomeMusicaAtualRadioLetsJam>();
+        PopupWindowBehavior nomeMusicaAtualRadioLetsJam = GameObject.Find("nomeMusicaAtualRadioLetsJam").GetComponent<PopupWindowBehavior>();
         nomeMusicaAtualRadioLetsJam.voltarAPosicaoInicial(); //faz o texto coma musica atual aparecer tb!
 
-        traducaoMusicaAtualLetsJam traducaoMusicaAtualRadioLetsJam = GameObject.Find("traducaoMusicaAtualRadioLetsJam").GetComponent<traducaoMusicaAtualLetsJam>();
+        PopupWindowBehavior traducaoMusicaAtualRadioLetsJam = GameObject.Find("traducaoMusicaAtualRadioLetsJam").GetComponent<PopupWindowBehavior>();
         traducaoMusicaAtualRadioLetsJam.voltarAPosicaoInicial(); //faz o texto com a traducao da musica atual aparecer tb!
     }
 

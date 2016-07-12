@@ -71,22 +71,23 @@
   <ItemGroup>
     <Compile Include="Assets\MultiplasLinguagens\Lang.cs" />
     <Compile Include="Assets\MultiplasLinguagens\MultiplasLinguagens.cs" />
+    <Compile Include="Assets\PopupWindowBehavior.cs" />
     <Compile Include="Assets\letsjam\BotaoEject.cs" />
     <Compile Include="Assets\letsjam\BotaoPause.cs" />
     <Compile Include="Assets\letsjam\BotaoPrevious.cs" />
     <Compile Include="Assets\letsjam\BotaoRewind.cs" />
     <Compile Include="Assets\letsjam\BotaoSkip.cs" />
-    <Compile Include="Assets\letsjam\PopupPauseLetsJam.cs" />
-    <Compile Include="Assets\letsjam\PopupTemCertezaQueQuerIrAoMainMenu.cs" />
     <Compile Include="Assets\letsjam\RadioLetsJam.cs" />
     <Compile Include="Assets\letsjam\botao_nao_voltar_menu_inicial.cs" />
-    <Compile Include="Assets\letsjam\nomeMusicaAtualRadioLetsJam.cs" />
+    <Compile Include="Assets\letsjam\fechar_letsjam.cs" />
+    <Compile Include="Assets\letsjam\fechar_letsjam_modo_hougaii.cs" />
     <Compile Include="Assets\letsjam\playPopupPauseLetsJam.cs" />
     <Compile Include="Assets\letsjam\stopPopupPauseLetsJam.cs" />
-    <Compile Include="Assets\letsjam\traducaoMusicaAtualLetsJam.cs" />
     <Compile Include="Assets\modohougaii\FornecedorDeSituacoes.cs" />
     <Compile Include="Assets\modohougaii\ModoHougaii.cs" />
     <Compile Include="Assets\modohougaii\SituacaoModoHougaii.cs" />
+    <Compile Include="Assets\modohougaii\TelaSituacaoHougaii.cs" />
+    <Compile Include="Assets\modohougaii\botaoAbrirLetsJam.cs" />
     <Compile Include="Assets\modohougaii\botaoInicioLetsJam.cs" />
   </ItemGroup>
   <ItemGroup>

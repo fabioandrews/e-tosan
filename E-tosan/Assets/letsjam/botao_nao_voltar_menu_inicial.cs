@@ -16,7 +16,7 @@ public class botao_nao_voltar_menu_inicial : MonoBehaviour {
     void OnMouseDown()
     {
         GameObject instanciaPopupTemCertezaQueQuerIrAoMainMenu = GameObject.Find("PopupTemCertezaQueQuerIrAoMainMenu");
-        PopupTemCertezaQueQuerIrAoMainMenu instanciaPopupTemCertezaQueQuerIrAoMainMenuComTipoReal = instanciaPopupTemCertezaQueQuerIrAoMainMenu.GetComponent<PopupTemCertezaQueQuerIrAoMainMenu>(); ;
+        PopupWindowBehavior instanciaPopupTemCertezaQueQuerIrAoMainMenuComTipoReal = instanciaPopupTemCertezaQueQuerIrAoMainMenu.GetComponent<PopupWindowBehavior>(); ;
         instanciaPopupTemCertezaQueQuerIrAoMainMenuComTipoReal.irParaPosicaoDeDesaparecer();
     }
 }

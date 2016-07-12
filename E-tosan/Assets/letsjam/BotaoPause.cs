@@ -15,7 +15,7 @@ public class BotaoPause : MonoBehaviour {
     void OnMouseDown()
     {
         GameObject instanciaPopupPauseLetsJam = GameObject.Find("PopupPauseLetsJam");
-        PopupPauseLetsJam instanciaPopupPauseLetsJamComTipoReal = instanciaPopupPauseLetsJam.GetComponent<PopupPauseLetsJam>(); ;
+        PopupWindowBehavior instanciaPopupPauseLetsJamComTipoReal = instanciaPopupPauseLetsJam.GetComponent<PopupWindowBehavior>(); ;
         instanciaPopupPauseLetsJamComTipoReal.voltarAPosicaoInicial();
 
         RadioLetsJam radioLetsJam = GameObject.Find("radioLetsJam").GetComponent<RadioLetsJam>();

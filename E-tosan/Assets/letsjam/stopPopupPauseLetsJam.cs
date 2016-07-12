@@ -16,7 +16,7 @@ public class stopPopupPauseLetsJam : MonoBehaviour {
     void OnMouseDown()
     {
         GameObject instanciaPopupTemCertezaQueQuerIrAoMainMenu = GameObject.Find("PopupTemCertezaQueQuerIrAoMainMenu");
-        PopupTemCertezaQueQuerIrAoMainMenu instanciaPopupTemCertezaQueQuerIrAoMainMenuComTipoReal = instanciaPopupTemCertezaQueQuerIrAoMainMenu.GetComponent<PopupTemCertezaQueQuerIrAoMainMenu>(); ;
+        PopupWindowBehavior instanciaPopupTemCertezaQueQuerIrAoMainMenuComTipoReal = instanciaPopupTemCertezaQueQuerIrAoMainMenu.GetComponent<PopupWindowBehavior>(); ;
         instanciaPopupTemCertezaQueQuerIrAoMainMenuComTipoReal.voltarAPosicaoInicial();
     }
 }

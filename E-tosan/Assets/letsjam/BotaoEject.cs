@@ -16,13 +16,14 @@ public class BotaoEject : MonoBehaviour {
     void OnMouseDown()
     {
         RadioLetsJam radioLetsJam = GameObject.Find("radioLetsJam").GetComponent<RadioLetsJam>();
-        radioLetsJam.irParaPosicaoDeDesaparecer();
+        PopupWindowBehavior radioLetsJamComoPopupWindow = GameObject.Find("radioLetsJam").GetComponent<PopupWindowBehavior>();
+        radioLetsJamComoPopupWindow.irParaPosicaoDeDesaparecer();
         radioLetsJam.stopCurrent();
 
-        nomeMusicaAtualRadioLetsJam nomeMusicaAtualRadioLetsJam = GameObject.Find("nomeMusicaAtualRadioLetsJam").GetComponent<nomeMusicaAtualRadioLetsJam>();
+        PopupWindowBehavior nomeMusicaAtualRadioLetsJam = GameObject.Find("nomeMusicaAtualRadioLetsJam").GetComponent<PopupWindowBehavior>();
         nomeMusicaAtualRadioLetsJam.irParaPosicaoDeDesaparecer();
 
-        traducaoMusicaAtualLetsJam traducaoMusicaAtualRadioLetsJam = GameObject.Find("traducaoMusicaAtualRadioLetsJam").GetComponent<traducaoMusicaAtualLetsJam>();
+        PopupWindowBehavior traducaoMusicaAtualRadioLetsJam = GameObject.Find("traducaoMusicaAtualRadioLetsJam").GetComponent<PopupWindowBehavior>();
         traducaoMusicaAtualRadioLetsJam.irParaPosicaoDeDesaparecer();
 
     }

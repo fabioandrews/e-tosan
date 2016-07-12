@@ -96,6 +96,11 @@ public class MultiplasLinguagens : MonoBehaviour
         Text textlugares = objetolugares.GetComponent<Text>();
         textlugares.text = lugares;
 
+        string subtitulo_letsjam = LMan.getString("subtitulo_letsjam");
+        GameObject objetosubtitulo_letsjam = GameObject.Find("subtitulo_letsjam");
+        Text textsubtitulo_letsjam = objetosubtitulo_letsjam.GetComponent<Text>();
+        textsubtitulo_letsjam.text = subtitulo_letsjam;
+
 
     }
 }

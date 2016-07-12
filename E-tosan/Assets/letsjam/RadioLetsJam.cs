@@ -33,26 +33,16 @@ public class RadioLetsJam : MonoBehaviour
     private string absolutePath; // relative path to where the app is running - change this to "./music" in your case
 
     private string[] nomesArquivosDoRadio; //quais sao os nomes dos arquivos que deveriam fazer parte do radio atualmente? Ex: formas_verbais_hougaii
-    Vector3 posicaoInicial;
 
    private int quantosClipsForamLoaded; //variavel que vai sendo aumentada a medida que loadFile() vai terminando. Serve para eu esperar ate as corotinas acabarem
+    private bool aindaCarregandoClipes; //boleano relacionado com o atributo acima que muda para false quando a funcao ReloadSounds comeca e termina quando o ultimo arquivo de som em loadfile eh carregado
 
     // Use this for initialization
     void Start()
     {
-        posicaoInicial = transform.localPosition;
-        transform.localPosition = new Vector3(1000, 1000);
+        
     }
 
-    public void voltarAPosicaoInicial()
-    {
-        transform.localPosition = posicaoInicial;
-    }
-
-    public void irParaPosicaoDeDesaparecer()
-    {
-        transform.localPosition = new Vector3(1000, 1000);
-    }
 
     public void setarArquivosDoRadio(string[] nomesArquivosDevemEstarNoRadio, string caminhoAteArquivos)
     {
@@ -67,7 +57,7 @@ public class RadioLetsJam : MonoBehaviour
     //funcao para checar se todos os arquivos de audio ja foram carregados(preciso dele pq carregar arquivos de audio eh feito em corotinas)
     public bool terminouDeCarregarClips()
     {
-        if (quantosClipsForamLoaded == this.clips.Count)
+        if ((this.clips.Count == this.quantosClipsForamLoaded) && (this.aindaCarregandoClipes == false))
         {
             return true;
         }
@@ -162,8 +152,10 @@ public class RadioLetsJam : MonoBehaviour
         source.UnPause();
     }
 
+
     void ReloadSounds()
     {
+        this.aindaCarregandoClipes = true;
         this.quantosClipsForamLoaded = 0; //vamos passar para a fase de carregando clips
         clips.Clear();
         soundFiles = new LinkedList<FileInfo>();
@@ -225,5 +217,20 @@ public class RadioLetsJam : MonoBehaviour
 
         this.quantosClipsForamLoaded = this.quantosClipsForamLoaded + 1;
 
+        if(this.clips.Count == this.quantosClipsForamLoaded)
+        {
+            this.aindaCarregandoClipes = false;
+        }
+
     }
+
+    /*private void LoadFile(string path)
+    {
+        WWW www = new WWW("file://" + path);
+        AudioClip clip = www.GetAudioClip(false);
+        clip.name = Path.GetFileName(path);
+        clips.Add(clip);
+        this.quantosClipsForamLoaded = this.quantosClipsForamLoaded + 1;
+
+    }*/
 }
