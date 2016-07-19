@@ -101,6 +101,15 @@ public class MultiplasLinguagens : MonoBehaviour
         Text textsubtitulo_letsjam = objetosubtitulo_letsjam.GetComponent<Text>();
         textsubtitulo_letsjam.text = subtitulo_letsjam;
 
+        string pontos = LMan.getString("pontos");
+        GameObject scoreTexto = GameObject.Find("scoreTexto");
+        Text textscoreTexto = scoreTexto.GetComponent<Text>();
+        textscoreTexto.text = pontos;
+
+        string fim_de_jogo = LMan.getString("fim_de_jogo");
+        Text tituloFimDeJogo = GameObject.Find("tituloFimDeJogo").GetComponent<Text>();
+        tituloFimDeJogo.text = fim_de_jogo;
+
 
     }
 }

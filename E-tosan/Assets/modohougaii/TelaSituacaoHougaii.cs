@@ -10,8 +10,18 @@ public class TelaSituacaoHougaii : MonoBehaviour
     private SituacaoModoHougaii situacaoAtual;
     private AudioSource arquivoAudioSituacaoAtualMelody;
     private AudioSource arquivoAudioSituacaoAtualRegras;
+    private bool arquivoAudioSituacaoAtualMelodyEstaPausado; //infelizmente nao existe um audiosource,ispaused, entao uma musica isplaying = false pode significar pausada ou nunca iniciada ou stoped
+    private bool arquivoAudioSituacaoAtualRegrasEstaPausado;
+
     private string arquivoDeAudioQueEstaTocandoAgoraEhmelodyOUregras; //pode ser "melody" ou "regras"
     private LinkedList<FileInfo> soundFiles; //necessario para quando for carregar arquivos de audio do diretorio
+    private bool esperarSituacaoRegrasTerminarParaPassarParaProximaTelaDeveriaTerminarSemFazerNada;
+    //a corotina acima eh bem sensivel: ela termina assim que os dois audios param de tocar e ja passa para a
+    //tela final. Porem, todos sabemos que assim que o usuario clica no botao reiniciar, os audios param e nao devemos ir para a tela final, nao eh?
+    //Entao, esse booleano vai me ajudar a fazer essa corotina andar na linha. Ele sera alterado para
+    //false assim que a corotina iniciar e devera ser true assim que o botao de reiniciar for apertado
+    //(ou seja, a funcao recomecarAudioSituacaoAtual() for tocada) e deve voltar a ser false pela corotina que o checou
+    //se ele for false quando ela checar
 
     public Sprite sprite_para_figura_central_melody;
     public Sprite sprite_para_figura_central_regras;
@@ -28,6 +38,13 @@ public class TelaSituacaoHougaii : MonoBehaviour
 	
 	}
 
+    //chamado pela telaEscolhaEtosanHougaii
+    public SituacaoModoHougaii getSituacaoAtual()
+    {
+        return this.situacaoAtual;
+    }
+
+
     public void setUsuarioEstaDentroDeLetsJam(bool novoValor)
     {
         usuarioEstaDentroDeLetsJam = novoValor;
@@ -39,31 +56,33 @@ public class TelaSituacaoHougaii : MonoBehaviour
                 arquivoDeAudioQueEstaTocandoAgoraEhmelodyOUregras.CompareTo("melody") == 0)
             {
                 this.arquivoAudioSituacaoAtualMelody.Pause();
+                arquivoAudioSituacaoAtualMelodyEstaPausado = true;
             }
             else if(arquivoDeAudioQueEstaTocandoAgoraEhmelodyOUregras != null)
             {
                 this.arquivoAudioSituacaoAtualRegras.Pause();
+                arquivoAudioSituacaoAtualRegrasEstaPausado = true;
             }
         }
         else
         {
             //hora de continuar o arquivo de audio da melody/regras ou comecar
-
-            if (this.arquivoAudioSituacaoAtualMelody.isPlaying == false && this.arquivoAudioSituacaoAtualRegras.isPlaying == false)
+            //SE NADA DER CERTO, TIRE ESSES BOOLEANS arquivoAudioSituacaoAtualMelodyEstaPausado E AS CHECAGENS DELES ABAIXO
+            //E FACA SEMPRE QUE O USUARIO CLICAR NO RADIO, ELE PARA E RECOMECA TODAS AS MUSICAS DO ZERO MESMO!
+            if (arquivoAudioSituacaoAtualMelodyEstaPausado == true)
+            {
+                arquivoAudioSituacaoAtualMelodyEstaPausado = false;
+                this.arquivoAudioSituacaoAtualMelody.UnPause();
+            }
+            else if (arquivoAudioSituacaoAtualRegrasEstaPausado == true)
+            {
+                arquivoAudioSituacaoAtualRegrasEstaPausado = false;
+                this.arquivoAudioSituacaoAtualRegras.UnPause();
+            }
+            else if ((arquivoAudioSituacaoAtualRegrasEstaPausado == false && arquivoAudioSituacaoAtualMelodyEstaPausado == false) &&
+                this.arquivoAudioSituacaoAtualMelody.isPlaying == false && this.arquivoAudioSituacaoAtualRegras.isPlaying == false)
             {
                 this.comecarArquivoDeAudioDaMelodyEMudarFiguraCentral();
-            }
-            else
-            {
-                //hora de despausar(continuar) algum arquivo de audio... qual o que estava passando?
-                if (arquivoDeAudioQueEstaTocandoAgoraEhmelodyOUregras.CompareTo("melody") == 0)
-                {
-                    this.arquivoAudioSituacaoAtualMelody.UnPause();
-                }
-                else
-                {
-                    this.arquivoAudioSituacaoAtualRegras.UnPause();
-                }
             }
         }
     }
@@ -197,7 +216,9 @@ public class TelaSituacaoHougaii : MonoBehaviour
         {
             //significa que o usuario apertou o botao de recomecar o audio durante o audio de regras. entao devemos 
             //alem de botar Play() no audio da melody, comecar a corotina do audio das regras
-            this.arquivoAudioSituacaoAtualRegras.Stop();
+            //a corotina ja ativada que estava esperando o audio das regras terminar deve ser parada sem fazer nada!
+            esperarSituacaoRegrasTerminarParaPassarParaProximaTelaDeveriaTerminarSemFazerNada = true;
+            this.pararTodosOsAudios();
             comecarArquivoDeAudioDaMelodyEMudarFiguraCentral();
         }
         else
@@ -213,13 +234,23 @@ public class TelaSituacaoHougaii : MonoBehaviour
     //assim que o arquivo de audio com a fala da melody parar, o da regras deve comecar
     IEnumerator esperarSituacaoRegrasTerminarParaPassarParaProximaTela()
     {
+        esperarSituacaoRegrasTerminarParaPassarParaProximaTelaDeveriaTerminarSemFazerNada = false;
         while (this.usuarioEstaDentroDeLetsJam == true ||
                 (this.usuarioEstaDentroDeLetsJam == false && (this.arquivoAudioSituacaoAtualRegras.isPlaying == true || this.arquivoAudioSituacaoAtualMelody.isPlaying == true)))
         {
             yield return new WaitForSeconds(.1f);
         }
 
-        this.passarParaProximaTela();
+        if (esperarSituacaoRegrasTerminarParaPassarParaProximaTelaDeveriaTerminarSemFazerNada == false)
+        {
+            //a funcao recomecarAudioSituacaoAtual() pode alterar esse booleano!
+            passarParaProximaTela();
+        }
+        else
+        {
+            //a corotina termina e n faz nada
+        }
+        
     }
 
     private void passarParaProximaTela()
@@ -231,5 +262,33 @@ public class TelaSituacaoHougaii : MonoBehaviour
         //aparecer proxima tela
         PopupWindowBehavior telaEscolhaEtosanHougaii = GameObject.Find("telaEscolhaEtosanHougaii").GetComponent<PopupWindowBehavior>();
         telaEscolhaEtosanHougaii.voltarAPosicaoInicial();
-    } 
+        PopupWindowBehavior escolhaEtosanHougaiiTexto = GameObject.Find("escolhaEtosanHougaiiTexto").GetComponent<PopupWindowBehavior>();
+        escolhaEtosanHougaiiTexto.voltarAPosicaoInicial();
+        GUIBarScript barra_afeicao_melody = GameObject.Find("barra_afeicao_melody").GetComponent<GUIBarScript>();
+        barra_afeicao_melody.voltarAPosicaoInicial();
+        GUIBarScript barra_bondade = GameObject.Find("barra_bondade").GetComponent<GUIBarScript>();
+        barra_bondade.voltarAPosicaoInicial();
+
+
+        //e dizer ao ModoHougaii qual a tela que deveria ser mostrada apos o letsjam
+        GameObject modoHougaii = GameObject.Find("Main Camera");
+        ModoHougaii modoHougaiiTipoReal = modoHougaii.GetComponent<ModoHougaii>();
+        modoHougaiiTipoReal.setaoFecharLetsJamMostrarQualTela("telaEscolhaEtosanHougaii");
+
+        //passar para a proxima tela a situacao atual
+        telaEscolhaEtosanHougaii telaEscolhaEtosanHougaiiComTipoReal = GameObject.Find("telaEscolhaEtosanHougaii").GetComponent<telaEscolhaEtosanHougaii>();
+        telaEscolhaEtosanHougaiiComTipoReal.prepararNovaTelaEscolhaEtosan(this.situacaoAtual); //vamos inicializar a tela seguinte com tudo que ela tem direito
+
+        this.arquivoAudioSituacaoAtualMelodyEstaPausado = false;
+        this.arquivoAudioSituacaoAtualRegrasEstaPausado = false;
+    }
+
+    //funcao chamada por botaoRecomecarAudioSituacaoAtual na tela da decisao do etosan senao dava bug nos audios(eh como se o audio da melody ja comecasse playando)
+    public void pararTodosOsAudios()
+    {
+        this.arquivoAudioSituacaoAtualMelody.Stop();
+        this.arquivoAudioSituacaoAtualRegras.Stop();
+        this.arquivoAudioSituacaoAtualMelodyEstaPausado = false;
+        this.arquivoAudioSituacaoAtualRegrasEstaPausado = false;
+    }
 }

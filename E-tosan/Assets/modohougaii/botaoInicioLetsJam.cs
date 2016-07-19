@@ -34,11 +34,6 @@ public class botaoInicioLetsJam : MonoBehaviour
         string ondeEstaoOsArquivosDeAudioDoLetsJam = modoHougaii.getondeEstaoOsArquivosDeAudioDoLetsJam();
         radioLetsJam.setarArquivosDoRadio(nomesArquivosParaRadio, ondeEstaoOsArquivosDeAudioDoLetsJam);
 
-        while (radioLetsJam.terminouDeCarregarClips() == false)
-        {
-            System.Threading.Thread.Sleep(500);
-        }
-
         radioLetsJam.PlayCurrent(); //para playar a musica 1 dessa lista de musicas
 
         PopupWindowBehavior nomeMusicaAtualRadioLetsJam = GameObject.Find("nomeMusicaAtualRadioLetsJam").GetComponent<PopupWindowBehavior>();

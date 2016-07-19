@@ -69,6 +69,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\GradientGUIBars\Script\ControlGUIScript.cs" />
+    <Compile Include="Assets\GradientGUIBars\Script\GUIBarScript.cs" />
+    <Compile Include="Assets\GradientGUIBars\Script\MoreButtonScript.cs" />
+    <Compile Include="Assets\GradientGUIBars\Script\MoveCameraScript.cs" />
     <Compile Include="Assets\MultiplasLinguagens\Lang.cs" />
     <Compile Include="Assets\MultiplasLinguagens\MultiplasLinguagens.cs" />
     <Compile Include="Assets\PopupWindowBehavior.cs" />
@@ -90,8 +94,13 @@
     <Compile Include="Assets\modohougaii\botaoAbrirLetsJam.cs" />
     <Compile Include="Assets\modohougaii\botaoInicioLetsJam.cs" />
     <Compile Include="Assets\modohougaii\botaoRecomecarAudioSituacaoAtual.cs" />
+    <Compile Include="Assets\modohougaii\botaoTelaEscolhaEtosan.cs" />
+    <Compile Include="Assets\modohougaii\botaoVoltarATelaSituacaoHougaii.cs" />
+    <Compile Include="Assets\modohougaii\carinha_para_encher.cs" />
+    <Compile Include="Assets\modohougaii\telaEscolhaEtosanHougaii.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\GradientGUIBars\ReadMe\AboutFonts.txt" />
     <None Include="Assets\MultiplasLinguagens\lang.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />

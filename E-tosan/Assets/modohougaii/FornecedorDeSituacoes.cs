@@ -105,7 +105,7 @@ public class FornecedorDeSituacoes
         else
         {
             //fiquei sem situacoes em possiveisSituacoesModificado. Vou reinicia-lo!
-            this.possiveisSituacoesModificado = this.possiveisSituacoesTotal;
+            this.passarTodosOsValoresDePossiveisSituacoesTotalParaPossiveisSituacaoesModificado();
 
             //agora eu tenho de pegar alguma situacao nova que nao exista ainda na linkedlist passada como entrada
             SituacaoModoHougaii situacaoVouRemover = null;
@@ -157,6 +157,17 @@ public class FornecedorDeSituacoes
             possiveisSituacoesModificado.Remove(situacaoVouRemover);
 
             return situacaoVouRemover;
+        }
+    }
+
+    private void passarTodosOsValoresDePossiveisSituacoesTotalParaPossiveisSituacaoesModificado() 
+    {
+        LinkedListNode<SituacaoModoHougaii> percorredorLista = this.possiveisSituacoesTotal.First;
+        while (percorredorLista != null && percorredorLista.Value != null)
+        {
+            SituacaoModoHougaii umaSituacao = percorredorLista.Value;
+            this.possiveisSituacoesModificado.AddLast(umaSituacao);
+            percorredorLista = percorredorLista.Next;
         }
     }
 
@@ -274,8 +285,8 @@ public class FornecedorDeSituacoes
         string verbos6 = "さんぽする";
         string lugars6 = "みち";
         LinkedList<string> duasRespostasDoEtosans6 = new LinkedList<string>();
-        duasRespostasDoEtosans5.AddLast("みちを　さんぽしたほうがいいです");
-        duasRespostasDoEtosans5.AddLast("みちを　さんぽしないほうがいいです");
+        duasRespostasDoEtosans6.AddLast("みちを　さんぽしたほうがいいです");
+        duasRespostasDoEtosans6.AddLast("みちを　さんぽしないほうがいいです");
         string respostaCorretaDoEtosans6 = "みちを　さんぽしたほうがいいです";
         bool respostaAgradaMelodys6 = true;
 

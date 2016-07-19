@@ -18,6 +18,7 @@ public class botaoRecomecarAudioSituacaoAtual : MonoBehaviour
 
     void OnMouseDown()
     {
+
         TelaSituacaoHougaii telaSituacaoHougaii = GameObject.Find("telaSituacaoHougaii").GetComponent<TelaSituacaoHougaii>();
         telaSituacaoHougaii.recomecarAudioSituacaoAtual();
     }

@@ -12,6 +12,8 @@
      <string name="verbos">Verbs</string>
      <string name="lugares">Places</string>
       <string name="subtitulo_letsjam">Review the game's vocabulary</string>
+       <string name="pontos">Score:</string>
+      <string name="fim_de_jogo">Game Over</string>
     
       
      <string name="～たいです_traducao">I want to... (verb)</string>
@@ -45,6 +47,8 @@
      <string name="verbos">Verbos</string>
      <string name="lugares">Lugares</string>
       <string name="subtitulo_letsjam">Revise o vocabulário usado no jogo</string>
+      <string name="pontos">Pontos:</string>
+      <string name="fim_de_jogo">Fim de jogo</string>
     
       
      <string name="～たいです_traducao">Eu quero fazer... (verbo)</string>

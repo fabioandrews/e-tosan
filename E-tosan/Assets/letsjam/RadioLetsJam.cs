@@ -46,6 +46,7 @@ public class RadioLetsJam : MonoBehaviour
 
     public void setarArquivosDoRadio(string[] nomesArquivosDevemEstarNoRadio, string caminhoAteArquivos)
     {
+        this.currentIndex = 0;
         absolutePath = caminhoAteArquivos;
         nomesArquivosDoRadio = nomesArquivosDevemEstarNoRadio;
 
@@ -107,11 +108,26 @@ public class RadioLetsJam : MonoBehaviour
 
     public void PlayCurrent()
     {
-        while (this.terminouDeCarregarClips() == false)
+        /*while (this.terminouDeCarregarClips() == false || currentIndex >= clips.Count)
         {
-            System.Threading.Thread.Sleep(500);
+            System.Threading.Thread.Sleep(100);
         }
 
+        source.clip = clips[currentIndex];
+        source.Play();
+        this.mudarNomeMusicaAtualRadioLetsJam();
+        this.mudarTraducaoMusicaAtualRadioLetsJam();*/
+        StartCoroutine(esperarTerminouDeCarregarClips());
+    }
+
+    IEnumerator esperarTerminouDeCarregarClips()
+    {
+        while (this.terminouDeCarregarClips() == false || currentIndex >= clips.Count)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        //depois de esperar que os clipes estejam carregados, eh finalmente hora de PlayCurrent() playar o audio
         source.clip = clips[currentIndex];
         source.Play();
         this.mudarNomeMusicaAtualRadioLetsJam();
