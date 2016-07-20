@@ -21,7 +21,7 @@ public class RadioLetsJam : MonoBehaviour
 
     public enum SeekDirection {Forward, Backward};
 
-    public AudioSource source;
+    private AudioSource source;
     public List<AudioClip> clips = new List<AudioClip>();
 
     [SerializeField]
@@ -42,8 +42,7 @@ public class RadioLetsJam : MonoBehaviour
     {
         
     }
-
-
+    
     public void setarArquivosDoRadio(string[] nomesArquivosDevemEstarNoRadio, string caminhoAteArquivos)
     {
         this.currentIndex = 0;

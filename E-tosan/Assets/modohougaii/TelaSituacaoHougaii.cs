@@ -44,6 +44,17 @@ public class TelaSituacaoHougaii : MonoBehaviour
         return this.situacaoAtual;
     }
 
+    /*funcao chamada sempre que uma nova situacao deve aparecer na tela e estas variaveis booleanas devem ser resetadas*/
+    public void iniciarNovamenteTelaSituacaoHougaii()
+    {
+        arquivoAudioSituacaoAtualMelody = null;
+        arquivoAudioSituacaoAtualRegras = null;
+        arquivoAudioSituacaoAtualMelodyEstaPausado = false; 
+        arquivoAudioSituacaoAtualRegrasEstaPausado = false;
+        arquivoDeAudioQueEstaTocandoAgoraEhmelodyOUregras = null;
+        esperarSituacaoRegrasTerminarParaPassarParaProximaTelaDeveriaTerminarSemFazerNada = false;
+
+    }
 
     public void setUsuarioEstaDentroDeLetsJam(bool novoValor)
     {
@@ -112,7 +123,14 @@ public class TelaSituacaoHougaii : MonoBehaviour
         string ondeEstaoOsArquivosDeAudioDeSituacoes=
             modoHougaiiComTipoReal.getondeEstaoOsArquivosDeAudioDeSituacoes();
 
-        soundFiles = new LinkedList<FileInfo>();
+        if (soundFiles == null)
+        {
+            soundFiles = new LinkedList<FileInfo>();
+        }
+        else
+        {
+            soundFiles.Clear();
+        }
         // get all valid files
         var info = new DirectoryInfo(ondeEstaoOsArquivosDeAudioDeSituacoes);
         FileInfo[] fileInfos = info.GetFiles();

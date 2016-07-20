@@ -7,8 +7,8 @@ using System.Text.RegularExpressions;
 public class telaEscolhaEtosanHougaii : MonoBehaviour
 {
     private SituacaoModoHougaii situacaoAtual;
-    private bool barraAfeicaoMelodyTerminouDeSubirOuDescer;
-    private bool barraBondadeTerminouDeSubirOuDescer;
+    public bool barraAfeicaoMelodyTerminouDeSubirOuDescer;
+    public bool barraBondadeTerminouDeSubirOuDescer;
     //so depois destes bool atualizarem eh que o jogo continua e uma nova situacao eh selecionada
 
     // Use this for initialization
@@ -30,7 +30,7 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
 
         //vamos mudar o texto nos botoes de acordo com a situacao atual
         this.mudarTextosBotoesTelaEscolhaEtosan();
-        this.mudarscoreTexto();
+        //this.mudarscoreTexto();
 
         barraAfeicaoMelodyTerminouDeSubirOuDescer = false;
         barraBondadeTerminouDeSubirOuDescer = false;
@@ -43,7 +43,7 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
     GUIBarScript barra_bondade = GameObject.Find("barra_bondade").GetComponent<GUIBarScript>();
     barra_bondade.Value = (float)1;
     StartCoroutine(fazerBarraAumentarOuDiminuirGradativamente(barra_bondade, (float)0.51));*/
-}
+    }
 
 
     private void mudarTextosBotoesTelaEscolhaEtosan()
@@ -89,9 +89,73 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
         objetoScoreTexto.text = textoScoreTexto;
     }
 
+
+    IEnumerator fazerScoreAumentarOuDiminuirGradativamente(int scoreAntigo, int scoreNovo)
+    {
+        Text objetoScoreNumero = GameObject.Find("scoreNumero").GetComponent<Text>();
+        Color corOriginalScoreNumero = objetoScoreNumero.color;
+        if (scoreAntigo > scoreNovo)
+        {
+            //vamos diminuir o score gradativamente e mudar sua cor p vermelho
+            objetoScoreNumero.color = Color.red;
+            int scoreSendoAtualizado = scoreAntigo;
+            while (scoreSendoAtualizado > scoreNovo)
+            {
+                scoreSendoAtualizado = scoreSendoAtualizado - 1;
+                String textoscoreSendoAtualizado = gerarTextoScore(scoreSendoAtualizado);
+                objetoScoreNumero.text = textoscoreSendoAtualizado;
+                yield return new WaitForSeconds(0.001F);
+            }
+        }
+        else
+        {
+            //vamos aumentar o score gradativamente e mudar sua cor p verde
+            objetoScoreNumero.color = Color.green;
+            int scoreSendoAtualizado = scoreAntigo;
+            while (scoreSendoAtualizado < scoreNovo)
+            {
+                scoreSendoAtualizado = scoreSendoAtualizado + 1;
+                String textoscoreSendoAtualizado = gerarTextoScore(scoreSendoAtualizado);
+                objetoScoreNumero.text = textoscoreSendoAtualizado;
+                yield return new WaitForSeconds(0.001F);
+            }
+        }
+
+        //por fim, vamos colocar a cor normal do score
+        objetoScoreNumero.color = corOriginalScoreNumero;
+    }
+
+    /*score sempre terah alguns zerinhos a mais...*/
+    private string gerarTextoScore(int score)
+    {
+        string textoScoreTexto = "";
+        if (score < 10)
+        {
+            textoScoreTexto = textoScoreTexto + "0000";
+        }
+        else if (score < 100)
+        {
+            textoScoreTexto = textoScoreTexto + "000";
+        }
+        else if (score < 1000)
+        {
+            textoScoreTexto = textoScoreTexto + "00";
+        }
+        else if (score < 10000)
+        {
+            textoScoreTexto = textoScoreTexto + "0";
+        }
+
+        textoScoreTexto = textoScoreTexto + score.ToString();
+
+        return textoScoreTexto;
+    }
+
     //funcao chamada externamente pelo botaoTelaEscolhaEtosan
     public void usuarioEscolheuUmaResposta(string respostaUsuario)
     {
+        ModoHougaii modoHougaii = GameObject.Find("Main Camera").GetComponent<ModoHougaii>();
+
         //vamos ver se eh a resposta correta e se sim, marcar pontos se nao diminuir
         String respostaCorreta = this.situacaoAtual.getrespostaCorretaDoEtosan();
 
@@ -102,6 +166,8 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
         {
             //o usuario escolheu a resposta correta!
             scoreAtual = scoreAntigo + 100;
+
+            //e vamos incluir um sfc de acerto
         }
         else
         {
@@ -114,12 +180,14 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
             {
                 scoreAtual = 0;
             }
-        }
 
-        ModoHougaii modoHougaii = GameObject.Find("Main Camera").GetComponent<ModoHougaii>();
+            //e vamos incluir um sfx de erro
+            modoHougaii.playEfeitoSonoro("errou_alternativa_escolha_etosan");
+        }
         modoHougaii.setscoreDaPartida(scoreAtual);
-        this.executarAnimacaoScoreAumentaOuDiminui(scoreAntigo, scoreAtual);
-        this.mudarscoreTexto();
+        //this.executarAnimacaoScoreAumentaOuDiminui(scoreAntigo, scoreAtual);
+        //this.mudarscoreTexto();
+        StartCoroutine(fazerScoreAumentarOuDiminuirGradativamente(scoreAntigo, scoreAtual));
 
         //agora vamos fazer as animacoes das barrinhas e carinhas dos medidores da parte de baixo da tela
         
@@ -164,6 +232,8 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
 
         StartCoroutine(esperarBarrasEncheremEDepoisExecutarProcedimentoPassarParaNovaSituacao(modoHougaii));
     }
+    
+
 
     private IEnumerator esperarBarrasEncheremEDepoisExecutarProcedimentoPassarParaNovaSituacao(ModoHougaii modoHougaii)
     {
@@ -233,8 +303,29 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
         {
             this.executarAnimacaoAumentarOuDiminuirBarrinhaAfeicaoMelody(novoPercentualDaBarrinhaAfeicaoMelody);
         }
+        else
+        {
+            //o boolean barraAfeicaoMelodyTerminouDeSubirOuDescer eh muito importante, mas ele nao vai 
+            //ser atualizado porque a barra n vai alterar... que tal esperar soh um pouco ate atualiza-lo?
+            StartCoroutine(esperarUmTempoEDepoisMudarBooleanoTerminouDeEncherBarrinhaMelody());
+        }
+       
         modoHougaii.setpercentualDaBarrinhaAfeicaoMelody(novoPercentualDaBarrinhaAfeicaoMelody);
     }
+
+
+
+    IEnumerator esperarUmTempoEDepoisMudarBooleanoTerminouDeEncherBarrinhaMelody()
+    {
+        float tempoGasto = (float) 0.01;
+        while (tempoGasto < 0.25)
+        {
+             tempoGasto = tempoGasto + (float)0.01;
+             yield return new WaitForSeconds(.100f);
+        }
+        this.barraAfeicaoMelodyTerminouDeSubirOuDescer = true;
+    }
+
 
     private void encherOuDiminuirBarraBondade(string respostaUsuario)
     {
@@ -273,7 +364,24 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
         {
             this.executarAnimacaoAumentarOuDiminuirBarrinhaBondade(novoPercentualDaBarrinhaBondade);
         }
+        else
+        {
+            //o boolean barraBondadeTerminouDeSubirOuDescer eh muito importante, mas ele nao vai 
+            //ser atualizado porque a barra n vai alterar... que tal esperar soh um pouco ate atualiza-lo?
+            StartCoroutine(esperarUmTempoEDepoisMudarBooleanoTerminouDeEncherBarrinhaBondade());
+        }
         modoHougaii.setpercentualDaBarrinhaBondade(novoPercentualDaBarrinhaBondade);
+    }
+
+    IEnumerator esperarUmTempoEDepoisMudarBooleanoTerminouDeEncherBarrinhaBondade()
+    {
+        float tempoGasto = (float)0.01;
+        while (tempoGasto < 0.25)
+        {
+            tempoGasto = tempoGasto + (float)0.01;
+            yield return new WaitForSeconds(.100f);
+        }
+        this.barraBondadeTerminouDeSubirOuDescer = true;
     }
 
 

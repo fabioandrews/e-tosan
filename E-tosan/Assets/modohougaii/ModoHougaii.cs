@@ -21,14 +21,15 @@ public class ModoHougaii : MonoBehaviour
     private string ondeEstaoOsArquivosDeAudioDeSituacoes = "Assets/modohougaii/audiosModoHougaii/situacao"; //usado por TelaSituacaoHougaii
     private string aoFecharLetsJamMostrarQualTela; //quando o usuario fechar a tela letsjam, qual tela deveria ser mostrada? Quem interpreta eh o fechar_letsjam_modo_hougaii
     private int scoreDaPartida; //o score atual da partida
-    public int percentualDaBarrinhaAfeicaoMelody;//o percentual da barrinha de afeicao da melody atual. lah da tela da escolha do eto-san
-    public int percentualDaBarrinhaBondade;
-    public  int percentualCarinhaAfeicaoMelody; //percentual de uma carinha ainda nao cheia de afeicao da Melody
-    public int quantasCarinhasAfeicaoMelodyEstaoCheias;
-    public int percentualCarinhaBondade; //percentual de uma carinha ainda nao cheia de bondade
-    public int quantasCarinhasBondadeEstaoCheias;
+    private int percentualDaBarrinhaAfeicaoMelody;//o percentual da barrinha de afeicao da melody atual. lah da tela da escolha do eto-san
+    private int percentualDaBarrinhaBondade;
+    private  int percentualCarinhaAfeicaoMelody; //percentual de uma carinha ainda nao cheia de afeicao da Melody
+    private int quantasCarinhasAfeicaoMelodyEstaoCheias;
+    private int percentualCarinhaBondade; //percentual de uma carinha ainda nao cheia de bondade
+    private int quantasCarinhasBondadeEstaoCheias;
 
-
+    private AudioSource source; //util para qualuqer efeito sonoro que o jogo precise executar
+    public AudioClip errou_alternativa_escolha_etosan;
 
     // Use this for initialization
     void Start ()
@@ -232,6 +233,7 @@ public class ModoHougaii : MonoBehaviour
             this.quatroSituacoesAtuais.Remove(situacaoVouRemover);
             GameObject telaSituacaoHougaii = GameObject.Find("telaSituacaoHougaii");
             TelaSituacaoHougaii telaSituacaoHougaiiComTipoReal = telaSituacaoHougaii.GetComponent<TelaSituacaoHougaii>();
+            telaSituacaoHougaiiComTipoReal.iniciarNovamenteTelaSituacaoHougaii();
             telaSituacaoHougaiiComTipoReal.setarSituacaoAtualESeuArquivoDeAudio(situacaoVouRemover);
             telaSituacaoHougaiiComTipoReal.setUsuarioEstaDentroDeLetsJam(false);
             aoFecharLetsJamMostrarQualTela = "telaSituacaoHougaii";
@@ -273,6 +275,7 @@ public class ModoHougaii : MonoBehaviour
                 
                 GameObject telaSituacaoHougaii = GameObject.Find("telaSituacaoHougaii");
                 TelaSituacaoHougaii telaSituacaoHougaiiComTipoReal = telaSituacaoHougaii.GetComponent<TelaSituacaoHougaii>(); ;
+                telaSituacaoHougaiiComTipoReal.iniciarNovamenteTelaSituacaoHougaii();
                 telaSituacaoHougaiiComTipoReal.setarSituacaoAtualESeuArquivoDeAudio(situacaoVouRemover);
                 telaSituacaoHougaiiComTipoReal.setUsuarioEstaDentroDeLetsJam(true);
 
@@ -343,6 +346,18 @@ public class ModoHougaii : MonoBehaviour
         telaFimDeJogo.voltarAPosicaoInicial();
         PopupWindowBehavior telaFimDeJogoTexto = GameObject.Find("telaFimDeJogoTexto").GetComponent<PopupWindowBehavior>();
         telaFimDeJogoTexto.voltarAPosicaoInicial();
+    }
+
+    public void playEfeitoSonoro(string nomeEfeitoSonoro)
+    {
+        if (source == null) source = gameObject.AddComponent<AudioSource>();
+
+        if (nomeEfeitoSonoro.CompareTo("errou_alternativa_escolha_etosan") == 0)
+        {
+            this.source.clip = errou_alternativa_escolha_etosan;
+        }
+
+        this.source.Play();
     }
 
 }
