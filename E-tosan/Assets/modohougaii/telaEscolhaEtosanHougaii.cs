@@ -167,7 +167,8 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
             //o usuario escolheu a resposta correta!
             scoreAtual = scoreAntigo + 100;
 
-            //e vamos incluir um sfc de acerto
+            //e vamos incluir um sfx de acerto
+            modoHougaii.playEfeitoSonoro("acertou_alternativa_escolha_etosan");
         }
         else
         {
@@ -216,8 +217,14 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
 
         int percentualCarinhaAfeicaoMelodyNovo = modoHougaii.getpercentualCarinhaAfeicaoMelody();
         int percentualCarinhaBondadeNovo = modoHougaii.getpercentualCarinhaBondade();
-        this.executarAnimacaoAumentarPercentualCarinhaAfeicaoMelody(percentualCarinhaAfeicaoMelodyAntigo, percentualCarinhaAfeicaoMelodyNovo, quantasCarinhasAfeicaoMelodyEstaoCheiasAntigo, modoHougaii);
+
+        //chamada de funcoes antigas, funcoes que nao diminuiam o percentual das carinhas 
+        /*this.executarAnimacaoAumentarPercentualCarinhaAfeicaoMelody(percentualCarinhaAfeicaoMelodyAntigo, percentualCarinhaAfeicaoMelodyNovo, quantasCarinhasAfeicaoMelodyEstaoCheiasAntigo, modoHougaii);
         this.executarAnimacaoAumentarPercentualCarinhaBondade(percentualCarinhaBondadeAntigo, percentualCarinhaBondadeNovo, usuarioErrouDePropositoParaFazerMelodyFeliz, quantasCarinhasBondadeEstaoCheiasAntigo, modoHougaii);
+        */
+
+        this.executarAnimacaoAlterarPercentualCarinhaAfeicaoMelody(percentualCarinhaAfeicaoMelodyAntigo, percentualCarinhaAfeicaoMelodyNovo, quantasCarinhasAfeicaoMelodyEstaoCheiasAntigo, modoHougaii);
+        this.executarAnimacaoAlterarPercentualCarinhaBondade(percentualCarinhaBondadeAntigo, percentualCarinhaBondadeNovo, usuarioErrouDePropositoParaFazerMelodyFeliz, quantasCarinhasBondadeEstaoCheiasAntigo, modoHougaii);
 
         //deixar a quantidade de carinhas verde ou vermelho por um tempo dependendo se ela mudou ou nao
         //e fazer um sfx de boo ou yeah
@@ -437,7 +444,23 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
             {
                 //por algum motivo, o 0.01 eh o 0% nestas barrinhas. O 0 as vezes da bug no gradiente da barrinha
                 barra.Value = barra.Value - (float)0.01;
+
+                if (barra.Value > 0.5)
+                {
+                    barra.TextColor = Color.green;
+                }
+                else if (barra.Value < 0.5)
+                {
+                    barra.TextColor = Color.red;
+                }
+
                 yield return new WaitForSeconds(.100f);
+            }
+
+            if (barra.Value > 0.4 && barra.Value <= 0.5)
+            {
+                barra.Value = (float) 0.5; //vamos fazer virar 50% a barra para poder mudar de cor
+                barra.TextColor = Color.black;
             }
 
             if (nomeBarra.CompareTo("barra_afeicao_melody") == 0)
@@ -455,7 +478,23 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
             while (barra.Value < valorNaQualABarraTemDeParar)
             {
                 barra.Value = barra.Value + (float)0.01;
+
+                if (barra.Value > 0.5)
+                {
+                    barra.TextColor = Color.green;
+                }
+                else if (barra.Value < 0.5)
+                {
+                    barra.TextColor = Color.red;
+                }
+
                 yield return new WaitForSeconds(.100f);
+            }
+
+            if (barra.Value > 0.4 && barra.Value <= 0.5)
+            {
+                barra.Value = (float)0.5; //vamos fazer virar 50% a barra para poder mudar de cor
+                barra.TextColor = Color.black;
             }
 
             if (nomeBarra.CompareTo("barra_afeicao_melody") == 0)
@@ -470,7 +509,8 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
     }
 
 
-    private void executarAnimacaoAumentarPercentualCarinhaAfeicaoMelody(int percentualAntigo, int novoPercentual, int quantasCarinhasAfeicaoMelodyEstaoCheiasAntigo, ModoHougaii modoHougaii)
+    //essa era a velha funcao, que soh fazia aumentar o percentual da carinha
+    /*private void executarAnimacaoAumentarPercentualCarinhaAfeicaoMelody(int percentualAntigo, int novoPercentual, int quantasCarinhasAfeicaoMelodyEstaoCheiasAntigo, ModoHougaii modoHougaii)
     {
         int quantasCarinhasAfeicaoMelodyEstaoCheiasNovo = modoHougaii.getquantasCarinhasAfeicaoMelodyEstaoCheias();
         if (percentualAntigo == novoPercentual)
@@ -498,10 +538,13 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
         }
         else
         {
-            //como neste jogo os percentuais nao diminuem, entao isso soh pode significar uma coisa: uma nova carinha cheia
-            //foi criada! Temos de fazer uma pequena animacao onde o percentual fica 100% e depois de um tempo vira 0%
-            carinha_para_encher carinha_para_encher_melody = GameObject.Find("carinha_para_encher_melody").GetComponent<carinha_para_encher>();
-            StartCoroutine(manterPercentualCarinhaEm100EDepoisVoltarA0(carinha_para_encher_melody));
+            if (quantasCarinhasAfeicaoMelodyEstaoCheiasAntigo != quantasCarinhasAfeicaoMelodyEstaoCheiasNovo)
+            {
+                //uma nova carinha cheia
+                //foi criada! Temos de fazer uma pequena animacao onde o percentual fica 100% e depois de um tempo vira 0%
+                carinha_para_encher carinha_para_encher_melody = GameObject.Find("carinha_para_encher_melody").GetComponent<carinha_para_encher>();
+                StartCoroutine(manterPercentualCarinhaEm100EDepoisVoltarA0(carinha_para_encher_melody));
+            }
         }
     }
 
@@ -542,11 +585,116 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
         }
         else
         {
-            //como neste jogo os percentuais nao diminuem, entao isso soh pode significar uma coisa: uma nova carinha cheia
-            //foi criada! Temos de fazer uma pequena animacao onde o percentual fica 100% e depois de um tempo vira 0%
-            carinha_para_encher carinha_para_encher_bondade = GameObject.Find("carinha_para_encher_bondade").GetComponent<carinha_para_encher>();
-            StartCoroutine(manterPercentualCarinhaEm100EDepoisVoltarA0(carinha_para_encher_bondade));
+            if (quantasCarinhasBondadeEstaoCheiasAntigo != quantasCarinhasBondadeEstaoCheiasNovo)
+            {
+                //uma nova carinha cheia
+                //foi criada! Temos de fazer uma pequena animacao onde o percentual fica 100% e depois de um tempo vira 0%
+                carinha_para_encher carinha_para_encher_bondade = GameObject.Find("carinha_para_encher_bondade").GetComponent<carinha_para_encher>();
+                StartCoroutine(manterPercentualCarinhaEm100EDepoisVoltarA0(carinha_para_encher_bondade));
+            }
         }
+    }*/
+
+    //essas sao as novas funcoes: as que diminuem o percentual das carinhas de bondade e afeicao tb
+    private void executarAnimacaoAlterarPercentualCarinhaAfeicaoMelody(int percentualAntigo, int novoPercentual, int quantasCarinhasAfeicaoMelodyEstaoCheiasAntigo, ModoHougaii modoHougaii)
+    {
+        int quantasCarinhasAfeicaoMelodyEstaoCheiasNovo = modoHougaii.getquantasCarinhasAfeicaoMelodyEstaoCheias();
+        if (quantasCarinhasAfeicaoMelodyEstaoCheiasAntigo != quantasCarinhasAfeicaoMelodyEstaoCheiasNovo)
+        {
+            //uma nova carinha cheia
+            //foi criada! Temos de fazer uma pequena animacao onde o percentual fica 100% e depois de um tempo vira 0%
+            carinha_para_encher carinha_para_encher_melody = GameObject.Find("carinha_para_encher_melody").GetComponent<carinha_para_encher>();
+            StartCoroutine(manterPercentualCarinhaEm100EDepoisVoltarA0(carinha_para_encher_melody));
+        }
+        else
+        {
+            if (percentualAntigo != novoPercentual)
+            {
+                carinha_para_encher carinha_para_encher_melody = GameObject.Find("carinha_para_encher_melody").GetComponent<carinha_para_encher>();
+                carinha_para_encher_melody.mudarSpriteAtual(novoPercentual);
+
+                if (percentualAntigo < novoPercentual)
+                {
+                    //usuario aumentou carinha bondade
+                    StartCoroutine(fazerCarinhaPiscarEDepoisVoltarAoNormal(carinha_para_encher_melody));
+                }
+                else
+                {
+                    //diminuiu 
+                    StartCoroutine(fazerCarinhaPiscarEDepoisVoltarAoNormal(carinha_para_encher_melody));
+                }
+            }
+            else
+            {
+                //nao faz nada. O percentual nao mudou!
+            }
+        }
+
+        
+    }
+
+    private void executarAnimacaoAlterarPercentualCarinhaBondade(int percentualAntigo, int novoPercentual, bool usuarioErrouDePropositoParaAgradarMelody, int quantasCarinhasBondadeEstaoCheiasAntigo, ModoHougaii modoHougaii)
+    {
+        if (usuarioErrouDePropositoParaAgradarMelody == true)
+        {
+            //INICIAR PUNICAO NA CARINHA TB!JA FOI FEITO ISSO NA PARTE DO CODIGO. FALTA NA PARTE DE ANIMACAO
+            //mas serah que o percentual de carinhas preenchidas de bondade nao ja eram 0? Se sim, nem preciso desta animacao
+            if (percentualAntigo > 0)
+            {
+                StartCoroutine(piscarCarinhaBondadeEDepoisVoltarAo0());
+            }
+        }
+        else
+        {
+            int quantasCarinhasBondadeEstaoCheiasNovo = modoHougaii.getquantasCarinhasBondadeEstaoCheias();
+            if (quantasCarinhasBondadeEstaoCheiasAntigo != quantasCarinhasBondadeEstaoCheiasNovo)
+            {
+                //uma nova carinha cheia
+                //foi criada! Temos de fazer uma pequena animacao onde o percentual fica 100% e depois de um tempo vira 0%
+                carinha_para_encher carinha_para_encher_bondade = GameObject.Find("carinha_para_encher_bondade").GetComponent<carinha_para_encher>();
+                StartCoroutine(manterPercentualCarinhaEm100EDepoisVoltarA0(carinha_para_encher_bondade));
+            }
+            else
+            {
+                if (percentualAntigo != novoPercentual)
+                {
+                    carinha_para_encher carinha_para_encher_bondade = GameObject.Find("carinha_para_encher_bondade").GetComponent<carinha_para_encher>();
+                    carinha_para_encher_bondade.mudarSpriteAtual(novoPercentual);
+
+                    if (percentualAntigo < novoPercentual)
+                    {
+                        //usuario aumentou carinha bondade
+                        StartCoroutine(fazerCarinhaPiscarEDepoisVoltarAoNormal(carinha_para_encher_bondade));
+                    }
+                    else
+                    {
+                        //diminuiu 
+                        StartCoroutine(fazerCarinhaPiscarEDepoisVoltarAoNormal(carinha_para_encher_bondade));
+                    }
+                    
+                }
+                else
+                {
+                    //percentual nao mudou. Nao faz nada
+                }
+            }
+        }
+        
+    }
+
+    //funcao onde ao mudar o percentual de uma carinha para maior ou menor, vou piscar ela em vermelho ou verde para insinuar mudanca
+    private IEnumerator fazerCarinhaPiscarEDepoisVoltarAoNormal(carinha_para_encher carinha)
+    {
+        carinha.GetComponent<Renderer>().enabled = true;
+        double tempoPassado = 0;
+        while (tempoPassado < 3)
+        {
+            yield return new WaitForSeconds((float)0.5);
+            carinha.GetComponent<Renderer>().enabled = !carinha.GetComponent<Renderer>().enabled;
+            tempoPassado = tempoPassado + 0.5;
+        }
+
+        carinha.GetComponent<Renderer>().enabled = true;
     }
 
     private IEnumerator piscarCarinhaBondadeEDepoisVoltarAo0()

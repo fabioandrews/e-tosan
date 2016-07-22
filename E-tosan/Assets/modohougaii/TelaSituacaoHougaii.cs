@@ -47,12 +47,13 @@ public class TelaSituacaoHougaii : MonoBehaviour
     /*funcao chamada sempre que uma nova situacao deve aparecer na tela e estas variaveis booleanas devem ser resetadas*/
     public void iniciarNovamenteTelaSituacaoHougaii()
     {
-        arquivoAudioSituacaoAtualMelody = null;
-        arquivoAudioSituacaoAtualRegras = null;
+        //arquivoAudioSituacaoAtualMelody = null;
+        //arquivoAudioSituacaoAtualRegras = null;
         arquivoAudioSituacaoAtualMelodyEstaPausado = false; 
         arquivoAudioSituacaoAtualRegrasEstaPausado = false;
         arquivoDeAudioQueEstaTocandoAgoraEhmelodyOUregras = null;
         esperarSituacaoRegrasTerminarParaPassarParaProximaTelaDeveriaTerminarSemFazerNada = false;
+        this.pararTodosOsAudios();
 
     }
 
@@ -304,8 +305,14 @@ public class TelaSituacaoHougaii : MonoBehaviour
     //funcao chamada por botaoRecomecarAudioSituacaoAtual na tela da decisao do etosan senao dava bug nos audios(eh como se o audio da melody ja comecasse playando)
     public void pararTodosOsAudios()
     {
-        this.arquivoAudioSituacaoAtualMelody.Stop();
-        this.arquivoAudioSituacaoAtualRegras.Stop();
+        if (this.arquivoAudioSituacaoAtualMelody != null)
+        {
+            this.arquivoAudioSituacaoAtualMelody.Stop();
+        }
+        if (this.arquivoAudioSituacaoAtualRegras != null)
+        {
+            this.arquivoAudioSituacaoAtualRegras.Stop();
+        }
         this.arquivoAudioSituacaoAtualMelodyEstaPausado = false;
         this.arquivoAudioSituacaoAtualRegrasEstaPausado = false;
     }

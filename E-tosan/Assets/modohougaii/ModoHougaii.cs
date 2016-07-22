@@ -30,6 +30,7 @@ public class ModoHougaii : MonoBehaviour
 
     private AudioSource source; //util para qualuqer efeito sonoro que o jogo precise executar
     public AudioClip errou_alternativa_escolha_etosan;
+    public AudioClip acertou_alternativa_escolha_etosan;
 
     // Use this for initialization
     void Start ()
@@ -41,8 +42,8 @@ public class ModoHougaii : MonoBehaviour
         this.scoreDaPartida = 0;
         this.quatroSituacoesAtuais = new LinkedList<SituacaoModoHougaii>();
 
-        this.percentualDaBarrinhaAfeicaoMelody = 0;
-        this.percentualDaBarrinhaBondade = 0;
+        this.percentualDaBarrinhaAfeicaoMelody = 50;
+        this.percentualDaBarrinhaBondade = 50;
         this.percentualCarinhaAfeicaoMelody = 0;
         this.quantasCarinhasAfeicaoMelodyEstaoCheias = 0;
         this.percentualCarinhaBondade = 0;
@@ -140,7 +141,8 @@ public class ModoHougaii : MonoBehaviour
         return this.quantasCarinhasBondadeEstaoCheias;
     }
 
-    public void encherPercentualCarinhaAfeicaoMelodyComBaseNoPercentualDaBarrinha()
+    //versao antiga! as carinhas apenas enchem!
+    /*public void encherPercentualCarinhaAfeicaoMelodyComBaseNoPercentualDaBarrinha()
     {
         if (percentualCarinhaAfeicaoMelody + this.percentualDaBarrinhaAfeicaoMelody >= 100)
         {
@@ -154,7 +156,6 @@ public class ModoHougaii : MonoBehaviour
             percentualCarinhaAfeicaoMelody = percentualCarinhaAfeicaoMelody + this.percentualDaBarrinhaAfeicaoMelody;
         } 
     }
-
     public void encherPercentualCarinhaBondadeComBaseNoPercentualDaBarrinha()
     {
 
@@ -168,6 +169,84 @@ public class ModoHougaii : MonoBehaviour
         {
             //nao vamos esvaziar a carinha atual
             percentualCarinhaBondade = percentualCarinhaBondade + this.percentualDaBarrinhaBondade;
+        }
+    }*/
+
+    //versao nova, as carinhas enchem e descem tb!
+    public void encherPercentualCarinhaAfeicaoMelodyComBaseNoPercentualDaBarrinha()
+    {
+        if (percentualDaBarrinhaAfeicaoMelody >= 0 && percentualDaBarrinhaAfeicaoMelody < 25)
+        {
+            //diminuir 50% da carinha afeicao
+            this.percentualCarinhaAfeicaoMelody = this.percentualCarinhaAfeicaoMelody - 50;
+        }
+        else if (percentualDaBarrinhaAfeicaoMelody >= 25 && percentualDaBarrinhaAfeicaoMelody < 50)
+        {
+            this.percentualCarinhaAfeicaoMelody = this.percentualCarinhaAfeicaoMelody - 25;
+        }
+        else if (percentualDaBarrinhaAfeicaoMelody == 50)
+        {
+            //nao faz nada. Carinha permanece intacta
+        }
+        else if (percentualDaBarrinhaAfeicaoMelody >= 51 && percentualDaBarrinhaAfeicaoMelody < 75)
+        {
+            this.percentualCarinhaAfeicaoMelody = this.percentualCarinhaAfeicaoMelody + 25;
+        }
+        else
+        {
+            //percentual barrinha maior que 75
+            this.percentualCarinhaAfeicaoMelody = this.percentualCarinhaAfeicaoMelody + 50;
+        }
+
+        //serah que no fim de tudo extrapolou alguma coisa?
+        if (percentualCarinhaAfeicaoMelody < 0)
+        {
+            percentualCarinhaAfeicaoMelody = 0;
+        }
+        else if (percentualCarinhaAfeicaoMelody >= 100)
+        {
+            //mais uma carinha cheia! Devemos tambem esvaziar a carinha atual
+            this.quantasCarinhasAfeicaoMelodyEstaoCheias = this.quantasCarinhasAfeicaoMelodyEstaoCheias + 1;
+            this.percentualCarinhaAfeicaoMelody = 0;
+        }
+    }
+
+    //versao nova, as carinhas enchem e descem tb!
+    public void encherPercentualCarinhaBondadeComBaseNoPercentualDaBarrinha()
+    {
+        if (percentualDaBarrinhaBondade >= 0 && percentualDaBarrinhaBondade < 25)
+        {
+            //diminuir 50% da carinha bondade
+            this.percentualCarinhaBondade = this.percentualCarinhaBondade - 50;
+        }
+        else if (percentualDaBarrinhaBondade >= 25 && percentualDaBarrinhaBondade < 50)
+        {
+            this.percentualCarinhaBondade = this.percentualCarinhaBondade - 25;
+        }
+        else if (percentualDaBarrinhaBondade == 50)
+        {
+            //nao faz nada. Carinha permanece intacta
+        }
+        else if (percentualDaBarrinhaBondade >= 51 && percentualDaBarrinhaBondade < 75)
+        {
+            this.percentualCarinhaBondade = this.percentualCarinhaBondade + 25;
+        }
+        else
+        {
+            //percentual barrinha maior que 75
+            this.percentualCarinhaBondade = this.percentualCarinhaBondade + 50;
+        }
+
+        //serah que no fim de tudo extrapolou alguma coisa?
+        if (percentualCarinhaBondade < 0)
+        {
+            percentualCarinhaBondade = 0;
+        }
+        else if (percentualCarinhaBondade >= 100)
+        {
+            //mais uma carinha cheia! Devemos tambem esvaziar a carinha atual
+            this.quantasCarinhasBondadeEstaoCheias = this.quantasCarinhasBondadeEstaoCheias + 1;
+            this.percentualCarinhaBondade = 0;
         }
     }
 
@@ -355,6 +434,10 @@ public class ModoHougaii : MonoBehaviour
         if (nomeEfeitoSonoro.CompareTo("errou_alternativa_escolha_etosan") == 0)
         {
             this.source.clip = errou_alternativa_escolha_etosan;
+        }
+        else if (nomeEfeitoSonoro.CompareTo("acertou_alternativa_escolha_etosan") == 0)
+        {
+            this.source.clip = acertou_alternativa_escolha_etosan;
         }
 
         this.source.Play();
