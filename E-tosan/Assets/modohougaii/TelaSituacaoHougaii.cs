@@ -283,9 +283,9 @@ public class TelaSituacaoHougaii : MonoBehaviour
         telaEscolhaEtosanHougaii.voltarAPosicaoInicial();
         PopupWindowBehavior escolhaEtosanHougaiiTexto = GameObject.Find("escolhaEtosanHougaiiTexto").GetComponent<PopupWindowBehavior>();
         escolhaEtosanHougaiiTexto.voltarAPosicaoInicial();
-        GUIBarScript barra_afeicao_melody = GameObject.Find("barra_afeicao_melody").GetComponent<GUIBarScript>();
+        UIBarScript barra_afeicao_melody = GameObject.Find("barra_afeicao_melody").GetComponent<UIBarScript>();
         barra_afeicao_melody.voltarAPosicaoInicial();
-        GUIBarScript barra_bondade = GameObject.Find("barra_bondade").GetComponent<GUIBarScript>();
+        UIBarScript barra_bondade = GameObject.Find("barra_bondade").GetComponent<UIBarScript>();
         barra_bondade.voltarAPosicaoInicial();
 
 

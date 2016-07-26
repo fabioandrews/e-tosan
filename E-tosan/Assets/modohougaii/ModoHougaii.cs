@@ -402,11 +402,9 @@ public class ModoHougaii : MonoBehaviour
         escolhaEtosanHougaiiTexto.obterPosicaoInicial();
         escolhaEtosanHougaiiTexto.irParaPosicaoDeDesaparecer();
 
-        GUIBarScript barra_afeicao_melody = GameObject.Find("barra_afeicao_melody").GetComponent<GUIBarScript>();
-        barra_afeicao_melody.obterPosicaoInicial();
+        UIBarScript barra_afeicao_melody = GameObject.Find("barra_afeicao_melody").GetComponent<UIBarScript>();
         barra_afeicao_melody.irParaPosicaoDeDesaparecer();
-        GUIBarScript barra_bondade = GameObject.Find("barra_bondade").GetComponent<GUIBarScript>();
-        barra_bondade.obterPosicaoInicial();
+        UIBarScript barra_bondade = GameObject.Find("barra_bondade").GetComponent<UIBarScript>();
         barra_bondade.irParaPosicaoDeDesaparecer();
 
         PopupWindowBehavior telaFimDeJogo = GameObject.Find("telaFimDeJogo").GetComponent<PopupWindowBehavior>();

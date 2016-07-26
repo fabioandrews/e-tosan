@@ -36,11 +36,11 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
         barraBondadeTerminouDeSubirOuDescer = false;
 
     //para testar o funcionamento das barras de afeicao e bondade diminuindo seus valores, basta descomentar a linha seguinte
-    /*GUIBarScript barra_afeicao_melody = GameObject.Find("barra_afeicao_melody").GetComponent<GUIBarScript>();
+    /*UIBarScript barra_afeicao_melody = GameObject.Find("barra_afeicao_melody").GetComponent<UIBarScript>();
     barra_afeicao_melody.Value = (float)1;
     StartCoroutine(fazerBarraAumentarOuDiminuirGradativamente(barra_afeicao_melody, (float)0.01));
 
-    GUIBarScript barra_bondade = GameObject.Find("barra_bondade").GetComponent<GUIBarScript>();
+    UIBarScript barra_bondade = GameObject.Find("barra_bondade").GetComponent<UIBarScript>();
     barra_bondade.Value = (float)1;
     StartCoroutine(fazerBarraAumentarOuDiminuirGradativamente(barra_bondade, (float)0.51));*/
     }
@@ -419,15 +419,15 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
     }
     private void executarAnimacaoAumentarOuDiminuirBarrinhaAfeicaoMelody(int percentualBarrinhaNovo)
     {
-        GUIBarScript barra_afeicao_melody = GameObject.Find("barra_afeicao_melody").GetComponent<GUIBarScript>();
+        UIBarScript barra_afeicao_melody = GameObject.Find("barra_afeicao_melody").GetComponent<UIBarScript>();
         float valorNaQualABarraTemDeParar = (float)percentualBarrinhaNovo / (float)100;
         //fazendo cruz-credo: 100 equivale a 1 entao percentualBarrinhaNovo equivale a x, tenho o x acima
         string nome_barra = "barra_afeicao_melody";
-        StartCoroutine(fazerBarraAumentarOuDiminuirGradativamente(barra_afeicao_melody, valorNaQualABarraTemDeParar, nome_barra));
+        StartCoroutine(fazerBarraAumentarOuDiminuirGradativamente(barra_afeicao_melody,valorNaQualABarraTemDeParar, nome_barra));
     }
     private void executarAnimacaoAumentarOuDiminuirBarrinhaBondade(int percentualBarrinhaNovo)
     {
-        GUIBarScript barra_bondade = GameObject.Find("barra_bondade").GetComponent<GUIBarScript>();
+        UIBarScript barra_bondade = GameObject.Find("barra_bondade").GetComponent<UIBarScript>();
         float valorNaQualABarraTemDeParar = (float)percentualBarrinhaNovo / (float)100;
         //fazendo cruz-credo: 100 equivale a 1 entao percentualBarrinhaNovo equivale a x, tenho o x acima
         string nome_barra = "barra_bondade";
@@ -435,77 +435,77 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
     }
     //esse valor passado como parâmetro tem de estar entre 1 e 0.0. É bom se for multiplo de 10, colocar um digito 1 a mais no final.
     //Por exemplo: (float)0.31 darah 30% da barra
-    IEnumerator fazerBarraAumentarOuDiminuirGradativamente(GUIBarScript barra, float valorNaQualABarraTemDeParar, string nomeBarra)
+    IEnumerator fazerBarraAumentarOuDiminuirGradativamente(UIBarScript barra,float valorNaQualABarraTemDeParar, string nomeBarra)
     {
-        if (barra.Value > valorNaQualABarraTemDeParar)
-        {
-            //vamos diminuir a barra gradativamente
-            while (barra.Value > valorNaQualABarraTemDeParar && barra.Value > 0.01)
+            if (barra.Value > valorNaQualABarraTemDeParar)
             {
-                //por algum motivo, o 0.01 eh o 0% nestas barrinhas. O 0 as vezes da bug no gradiente da barrinha
-                barra.Value = barra.Value - (float)0.01;
-
-                if (barra.Value > 0.5)
+                //vamos diminuir a barra gradativamente
+                while (barra.Value > valorNaQualABarraTemDeParar && barra.Value > 0.01)
                 {
-                    barra.TextColor = Color.green;
+                    //por algum motivo, o 0.01 eh o 0% nestas barrinhas. O 0 as vezes da bug no gradiente da barrinha
+                    barra.Value = barra.Value - (float)0.01;
+
+                    if (barra.Value > 0.5)
+                    {
+                        barra.TextColor = Color.green;
+                    }
+                    else if (barra.Value < 0.5)
+                    {
+                        barra.TextColor = Color.red;
+                    }
+
+                    yield return new WaitForSeconds(.100f);
                 }
-                else if (barra.Value < 0.5)
+
+                if (barra.Value > 0.4 && barra.Value <= 0.5)
                 {
-                    barra.TextColor = Color.red;
+                    barra.Value = (float)0.5; //vamos fazer virar 50% a barra para poder mudar de cor
+                    barra.TextColor = Color.black;
                 }
 
-                yield return new WaitForSeconds(.100f);
-            }
-
-            if (barra.Value > 0.4 && barra.Value <= 0.5)
-            {
-                barra.Value = (float) 0.5; //vamos fazer virar 50% a barra para poder mudar de cor
-                barra.TextColor = Color.black;
-            }
-
-            if (nomeBarra.CompareTo("barra_afeicao_melody") == 0)
-            {
-                this.barraAfeicaoMelodyTerminouDeSubirOuDescer = true;
+                if (nomeBarra.CompareTo("barra_afeicao_melody") == 0)
+                {
+                    this.barraAfeicaoMelodyTerminouDeSubirOuDescer = true;
+                }
+                else
+                {
+                    this.barraBondadeTerminouDeSubirOuDescer = true;
+                }
             }
             else
             {
-                this.barraBondadeTerminouDeSubirOuDescer = true;
-            }
-        }
-        else
-        {
-            //vamos aumentar a barra gradativamente
-            while (barra.Value < valorNaQualABarraTemDeParar)
-            {
-                barra.Value = barra.Value + (float)0.01;
+                //vamos aumentar a barra gradativamente
+                while (barra.Value < valorNaQualABarraTemDeParar)
+                {
+                    barra.Value = barra.Value + (float)0.01;
 
-                if (barra.Value > 0.5)
-                {
-                    barra.TextColor = Color.green;
-                }
-                else if (barra.Value < 0.5)
-                {
-                    barra.TextColor = Color.red;
+                    if (barra.Value > 0.5)
+                    {
+                        barra.TextColor = Color.green;
+                    }
+                    else if (barra.Value < 0.5)
+                    {
+                        barra.TextColor = Color.red;
+                    }
+
+                    yield return new WaitForSeconds(.100f);
                 }
 
-                yield return new WaitForSeconds(.100f);
-            }
+                if (barra.Value > 0.4 && barra.Value <= 0.5)
+                {
+                    barra.Value = (float)0.5; //vamos fazer virar 50% a barra para poder mudar de cor
+                    barra.TextColor = Color.black;
+                }
 
-            if (barra.Value > 0.4 && barra.Value <= 0.5)
-            {
-                barra.Value = (float)0.5; //vamos fazer virar 50% a barra para poder mudar de cor
-                barra.TextColor = Color.black;
+                if (nomeBarra.CompareTo("barra_afeicao_melody") == 0)
+                {
+                    this.barraAfeicaoMelodyTerminouDeSubirOuDescer = true;
+                }
+                else
+                {
+                    this.barraBondadeTerminouDeSubirOuDescer = true;
+                }
             }
-
-            if (nomeBarra.CompareTo("barra_afeicao_melody") == 0)
-            {
-                this.barraAfeicaoMelodyTerminouDeSubirOuDescer = true;
-            }
-            else
-            {
-                this.barraBondadeTerminouDeSubirOuDescer = true;
-            }
-        }
     }
 
 
@@ -616,12 +616,12 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
                 if (percentualAntigo < novoPercentual)
                 {
                     //usuario aumentou carinha bondade
-                    StartCoroutine(fazerCarinhaPiscarEDepoisVoltarAoNormal(carinha_para_encher_melody));
+                    //StartCoroutine(fazerCarinhaPiscarEDepoisVoltarAoNormal(carinha_para_encher_melody));
                 }
                 else
                 {
                     //diminuiu 
-                    StartCoroutine(fazerCarinhaPiscarEDepoisVoltarAoNormal(carinha_para_encher_melody));
+                    //StartCoroutine(fazerCarinhaPiscarEDepoisVoltarAoNormal(carinha_para_encher_melody));
                 }
             }
             else
@@ -664,12 +664,12 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
                     if (percentualAntigo < novoPercentual)
                     {
                         //usuario aumentou carinha bondade
-                        StartCoroutine(fazerCarinhaPiscarEDepoisVoltarAoNormal(carinha_para_encher_bondade));
+                        //StartCoroutine(fazerCarinhaPiscarEDepoisVoltarAoNormal(carinha_para_encher_bondade));
                     }
                     else
                     {
                         //diminuiu 
-                        StartCoroutine(fazerCarinhaPiscarEDepoisVoltarAoNormal(carinha_para_encher_bondade));
+                        //StartCoroutine(fazerCarinhaPiscarEDepoisVoltarAoNormal(carinha_para_encher_bondade));
                     }
                     
                 }
@@ -815,9 +815,9 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
         PopupWindowBehavior escolhaEtosanHougaiiTexto = GameObject.Find("escolhaEtosanHougaiiTexto").GetComponent<PopupWindowBehavior>();
         escolhaEtosanHougaiiTexto.irParaPosicaoDeDesaparecer();
 
-        GUIBarScript barra_afeicao_melody = GameObject.Find("barra_afeicao_melody").GetComponent<GUIBarScript>();
+        UIBarScript barra_afeicao_melody = GameObject.Find("barra_afeicao_melody").GetComponent<UIBarScript>();
         barra_afeicao_melody.irParaPosicaoDeDesaparecer();
-        GUIBarScript barra_bondade = GameObject.Find("barra_bondade").GetComponent<GUIBarScript>();
+        UIBarScript barra_bondade = GameObject.Find("barra_bondade").GetComponent<UIBarScript>();
         barra_bondade.irParaPosicaoDeDesaparecer();
     }
 

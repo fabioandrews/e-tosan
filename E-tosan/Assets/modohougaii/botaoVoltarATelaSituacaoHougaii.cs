@@ -24,9 +24,9 @@ public class botaoVoltarATelaSituacaoHougaii : MonoBehaviour {
         PopupWindowBehavior escolhaEtosanHougaiiTextoTipoReal = escolhaEtosanHougaiiTexto.GetComponent<PopupWindowBehavior>();
         escolhaEtosanHougaiiTextoTipoReal.irParaPosicaoDeDesaparecer();
         //e as barras de afeicao e bondade
-        GUIBarScript barra_afeicao_melody = GameObject.Find("barra_afeicao_melody").GetComponent<GUIBarScript>();
+        UIBarScript barra_afeicao_melody = GameObject.Find("barra_afeicao_melody").GetComponent<UIBarScript>();
         barra_afeicao_melody.irParaPosicaoDeDesaparecer();
-        GUIBarScript barra_bondade = GameObject.Find("barra_bondade").GetComponent<GUIBarScript>();
+        UIBarScript barra_bondade = GameObject.Find("barra_bondade").GetComponent<UIBarScript>();
         barra_bondade.irParaPosicaoDeDesaparecer();
 
         //fazer a tela da situacao atual aparecer

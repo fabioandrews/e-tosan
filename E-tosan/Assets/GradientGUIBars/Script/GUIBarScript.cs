@@ -50,22 +50,63 @@ public class GUIBarScript : MonoBehaviour
 
     void Start()
     {
+    }
 
+    public Vector2 WorldToGuiPoint(Vector3 position)
+    {
+        var guiPosition = Camera.main.WorldToScreenPoint(position);
+        // Y axis coordinate in screen is reversed relative to world Y coordinate
+        guiPosition.y = Screen.height - guiPosition.y;
+
+        return guiPosition;
     }
 
     public void obterPosicaoInicial()
     {
-        this.PosicaoInicial = this.Position;
+        this.PosicaoInicial = transform.localPosition;
+        if (this.gameObject.name.CompareTo("barra_bondade") == 0)
+        {
+            //this.PosicaoInicial = GameObject.Find("cara_diabinho").transform.localPosition + (Vector3.up * 5);
+            this.PosicaoInicial = GameObject.Find("cara_diabinho").transform.position;
+            //this.posicaoRetangulo = Camera.main.WorldToViewportPoint(this.PosicaoInicial); //converter posicao do gameobject na tela para posicao que retangulo precisa
+            Vector3 cara_diabinho_posicao = GameObject.Find("cara_diabinho").transform.position;
+            Vector3 posicao_retangulo_relativa_ao_diabinho = cara_diabinho_posicao;
+            //posicao_retangulo_relativa_ao_diabinho.x += (float)0.5;
+            //posicao_retangulo_relativa_ao_diabinho.x += (float)(GameObject.Find("cara_diabinho").GetComponent<Renderer>().bounds.size.x / 2);
+            Vector3 screenPos = Camera.main.WorldToScreenPoint(cara_diabinho_posicao);
+            Vector2 guiPosition = new Vector2(screenPos.x / Screen.width, screenPos.y / Screen.height);
+            this.posicaoRetangulo = guiPosition;
+            //this.posicaoRetangulo = WorldToGuiPoint(GameObject.Find("cara_diabinho").transform.position);
+        }
     }
 
     public void irParaPosicaoDeDesaparecer()
     {
-        this.Position = new Vector2(1000, 1000);
+        this.transform.localPosition = new Vector2(10000, 10000);
+        this.posicaoRetangulo = Camera.main.WorldToScreenPoint(transform.position); //converter posicao do gameobject na tela para posicao que retangulo precisa
+
     }
 
     public void voltarAPosicaoInicial()
     {
-        this.Position = PosicaoInicial;
+        this.transform.localPosition = PosicaoInicial;
+        //this.posicaoRetangulo = Camera.main.WorldToViewportPoint(PosicaoInicial);
+        if (this.gameObject.name.CompareTo("barra_bondade") == 0)
+        {
+            Vector3 cara_diabinho_posicao = GameObject.Find("cara_diabinho").transform.position;
+            print("cara_diabinho position:" + GameObject.Find("cara_diabinho").transform.position.x + ";" + GameObject.Find("cara_diabinho").transform.localPosition.y);
+            Vector3 posicao_retangulo_relativa_ao_diabinho = cara_diabinho_posicao;
+            //posicao_retangulo_relativa_ao_diabinho.x += (float)0.5;
+            posicao_retangulo_relativa_ao_diabinho.x += (float)(GameObject.Find("cara_diabinho").GetComponent<Renderer>().bounds.size.x / 2);
+            //this.posicaoRetangulo = Camera.main.WorldToScreenPoint(posicao_retangulo_relativa_ao_diabinho);
+            //this.posicaoRetangulo.y += Screen.width / 1200;//(float)70.5;
+            //this.posicaoRetangulo = WorldToGuiPoint(GameObject.Find("cara_diabinho").transform.position);
+
+            Vector3 screenPos = Camera.main.WorldToScreenPoint(cara_diabinho_posicao);
+            Vector2 guiPosition = new Vector2(screenPos.x / Screen.width, screenPos.y / Screen.height);
+            this.posicaoRetangulo = guiPosition;
+
+        }
     }
 
 
@@ -81,18 +122,36 @@ public class GUIBarScript : MonoBehaviour
             UpdateBar();
         }
 
+
+
         //if you don't have a background texture i won't draw it
         if (Background != null)
         {
-            GUI.DrawTexture(new Rect(Position.x, Position.y, Background.width * ScaleSize, Background.height * ScaleSize), Background);
+
+            //GUI.DrawTexture(new Rect(posicaoRetangulo.x, posicaoRetangulo.y,Background.width * ScaleSize,Background.height * ScaleSize),Background);
+            //GUI.DrawTexture(new Rect(posicaoRetangulo.x, Screen.height - posicaoRetangulo.y, Background.width * ScaleSize, Background.height * ScaleSize), Background);
+            Vector2 v2 = new Vector2(Background.width * ScaleSize, Background.height* ScaleSize);
+
+            GUI.DrawTexture(new Rect(posicaoRetangulo, v2), Background);
+
         }
 
-        GUI.DrawTexture(new Rect(Position.x, Position.y, ValueBar.width * ScaleSize, ValueBar.height * ScaleSize), ValueBar);
+        //GUI.DrawTexture(new Rect(posicaoRetangulo.x, posicaoRetangulo.y,ValueBar.width * ScaleSize,ValueBar.height * ScaleSize),ValueBar);
+        //GUI.DrawTexture(new Rect(posicaoRetangulo.x, Screen.height - posicaoRetangulo.y, ValueBar.width * ScaleSize, ValueBar.height * ScaleSize), ValueBar);
+        Vector2 v3 = new Vector2(Background.width * ScaleSize, Background.height * ScaleSize);
+        GUI.DrawTexture(new Rect(this.posicaoRetangulo, v3), ValueBar);
+
 
         //if you don't have a foreground texture i won't draw it
         if (Foreground != null)
         {
-            GUI.DrawTexture(new Rect(Position.x, Position.y, Foreground.width * ScaleSize, Foreground.height * ScaleSize), Foreground);
+            //GUI.DrawTexture(new Rect(posicaoRetangulo.x, posicaoRetangulo.y,Foreground.width * ScaleSize,Foreground.height * ScaleSize),Foreground);
+            //GUI.DrawTexture(new Rect(posicaoRetangulo.x, Screen.height - posicaoRetangulo.y, Foreground.width * ScaleSize, Foreground.height * ScaleSize), Foreground);
+            Vector2 v2 = new Vector2(Background.width * ScaleSize, Background.height * ScaleSize);
+
+            GUI.DrawTexture(new Rect(this.posicaoRetangulo,v2), Foreground);
+
+
         }
 
         //if display text is enabled the display text will be drawn
@@ -115,7 +174,7 @@ public class GUIBarScript : MonoBehaviour
 
             TextString = ((int)(Value * 100)).ToString() + "%";
 
-            GUI.Label(new Rect(Position.x + TextOffset.x, Position.y + TextOffset.y, ValueBar.width * ScaleSize, ValueBar.height * ScaleSize), TextString, LabelStyle);
+            GUI.Label(new Rect(posicaoRetangulo.x + TextOffset.x, posicaoRetangulo.y + TextOffset.y, ValueBar.width * ScaleSize, ValueBar.height * ScaleSize), TextString, LabelStyle);
 
         }
     }

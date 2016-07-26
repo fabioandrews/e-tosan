@@ -76,6 +76,7 @@
     <Compile Include="Assets\MultiplasLinguagens\Lang.cs" />
     <Compile Include="Assets\MultiplasLinguagens\MultiplasLinguagens.cs" />
     <Compile Include="Assets\PopupWindowBehavior.cs" />
+    <Compile Include="Assets\UIGradient\Scripts\UIBarScript.cs" />
     <Compile Include="Assets\letsjam\BotaoEject.cs" />
     <Compile Include="Assets\letsjam\BotaoPause.cs" />
     <Compile Include="Assets\letsjam\BotaoPrevious.cs" />
