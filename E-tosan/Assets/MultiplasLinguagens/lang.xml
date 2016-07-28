@@ -14,6 +14,10 @@
       <string name="subtitulo_letsjam">Review the game's vocabulary</string>
        <string name="pontos">Score:</string>
       <string name="fim_de_jogo">Game Over</string>
+      <string name="pontuacao_final_dois_pontos">Final score: </string>
+      <string name="moedas_obtidas_dois_pontos">Coins won: </string>
+      <string name="moedas_dois_pontos">Coins: </string>
+      <string name="reiniciar">Retry</string>
     
       
      <string name="～たいです_traducao">I want to... (verb)</string>
@@ -49,6 +53,10 @@
       <string name="subtitulo_letsjam">Revise o vocabulário usado no jogo</string>
       <string name="pontos">Pontos:</string>
       <string name="fim_de_jogo">Fim de jogo</string>
+      <string name="pontuacao_final_dois_pontos">Pontuação final: </string>
+      <string name="moedas_obtidas_dois_pontos">Moedas obtidas: </string>
+      <string name="moedas_dois_pontos">Moedas: </string>
+      <string name="reiniciar">Reiniciar</string>
     
       
      <string name="～たいです_traducao">Eu quero fazer... (verbo)</string>

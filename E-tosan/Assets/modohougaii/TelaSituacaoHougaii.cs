@@ -26,6 +26,11 @@ public class TelaSituacaoHougaii : MonoBehaviour
     public Sprite sprite_para_figura_central_melody;
     public Sprite sprite_para_figura_central_regras;
 
+    private bool arquivoAudioMelodyComecou;
+    //esses booleanos servem para a thread que fica esperando o audio da melody acabar para tocar o das regras soh tocar
+    //as regras quando necessario. Existiam casos em que as regras eram tocadas e o da melody nao tocava nunca. Nao mais!
+    //booleano eh ativado no comecinho de comecarArquivoDeAudioDaMelodyEMudarFiguraCentral()(vira regras) e comecarArquivoDeAudioRegrasEMudarFiguraCentral()(vira nenhum) e iniciarNovamenteTelaSituacaoHougaii()(vira melody)...
+
     // Use this for initialization
     void Start ()
     {
@@ -49,6 +54,9 @@ public class TelaSituacaoHougaii : MonoBehaviour
     {
         //arquivoAudioSituacaoAtualMelody = null;
         //arquivoAudioSituacaoAtualRegras = null;
+        this.arquivoAudioMelodyComecou = false;
+        StartCoroutine(esperarAudioMelodyComecarParaAlterarBooleanoArquivoAudioMelodyComecou());
+
         arquivoAudioSituacaoAtualMelodyEstaPausado = false; 
         arquivoAudioSituacaoAtualRegrasEstaPausado = false;
         arquivoDeAudioQueEstaTocandoAgoraEhmelodyOUregras = null;
@@ -56,6 +64,25 @@ public class TelaSituacaoHougaii : MonoBehaviour
         this.pararTodosOsAudios();
 
     }
+
+    //por que esse metodo eh importante? Eh uma corotina que checa se o audio das regras deve ser play. O que ele tem como referencia? Se o arquivo da melody ja parou de tocar.
+    //O que aconteceria se todos os audios parassem? O arquivo da melody parou de tocar, certo? Entao daria problema!
+    //Essa corotina, esse booleano arquivoAudioMelodyComecou, this.arquivoAudioSituacaoAtualMelody.isPlaying e o booleano que diz se usuario esta dentro do letsjam, todos eles ajudam a corotina que dah play no audio das regras a funcionar normalmente
+    IEnumerator esperarAudioMelodyComecarParaAlterarBooleanoArquivoAudioMelodyComecou()
+    {
+        while (this.arquivoAudioMelodyComecou == false)
+        {
+            if (this.arquivoAudioSituacaoAtualMelody != null && this.arquivoAudioSituacaoAtualMelody.isPlaying == true)
+            {
+                this.arquivoAudioMelodyComecou = true;
+            }
+            else
+            {
+                yield return new WaitForSeconds(1);
+            }
+        }
+    }
+
 
     public void setUsuarioEstaDentroDeLetsJam(bool novoValor)
     {
@@ -104,13 +131,18 @@ public class TelaSituacaoHougaii : MonoBehaviour
     {
         while (this.arquivoAudioSituacaoAtualRegras.isPlaying == false)
         {
-            if (this.usuarioEstaDentroDeLetsJam == false && this.arquivoAudioSituacaoAtualMelody.isPlaying == false)
+            //print(Time.realtimeSinceStartup + "/arquivoMelodyComecou=" + this.arquivoAudioMelodyComecou);
+            if (this.arquivoAudioMelodyComecou == true && this.usuarioEstaDentroDeLetsJam == false && this.arquivoAudioSituacaoAtualMelody.isPlaying == false)
             {
+                //print(Time.realtimeSinceStartup + "/comecou arquivo audio regras");
+                //print(Time.realtimeSinceStartup + "/arquivoAudioMelodyComecou=" + this.arquivoAudioMelodyComecou);
+                //print(Time.realtimeSinceStartup + "/usuarioEstaDentroDeLetsJam=" + this.usuarioEstaDentroDeLetsJam);
+                //print(Time.realtimeSinceStartup + "/arquivoAudioSituacaoAtualMelody.isPlaying=" + this.arquivoAudioSituacaoAtualMelody.isPlaying);
                 //hora de comecar o outro audio!
                 this.comecarArquivoDeAudioRegrasEMudarFiguraCentral();
             }
 
-            yield return new WaitForSeconds(.1f);
+            yield return new WaitForSeconds(1);
         }
     }
     public void setarSituacaoAtualESeuArquivoDeAudio(SituacaoModoHougaii situacaoNova)
@@ -211,6 +243,7 @@ public class TelaSituacaoHougaii : MonoBehaviour
 
         StartCoroutine(esperarSituacaoMelodyTerminarParaDarPlayNaSituacaoRegras());
         //inicio uma thread para assim que o arquivo de audio com a fala da melody parar, o da regras comecar
+
     }
 
     private void comecarArquivoDeAudioRegrasEMudarFiguraCentral()
@@ -221,7 +254,7 @@ public class TelaSituacaoHougaii : MonoBehaviour
 
         //mudar figura central
         SpriteRenderer spriteRendererFiguraCentral =
-            GameObject.Find("figuraCentralSituacaoAtualHougaii").GetComponent<SpriteRenderer>(); // we are accessing the SpriteRenderer that is attached to the Gameobject
+            GameObject.Find("figuraCentralSituacaoAtualHougaii").GetComponent<SpriteRenderer>();
         spriteRendererFiguraCentral.sprite = this.sprite_para_figura_central_regras;
 
         //falta comecar a corotina que passa para a proxima tela assim que acaba esse contador
@@ -250,14 +283,14 @@ public class TelaSituacaoHougaii : MonoBehaviour
         }
     }
 
-    //assim que o arquivo de audio com a fala da melody parar, o da regras deve comecar
+    //assim que o arquivo de audio regras parar, devemos passar para proxima tela
     IEnumerator esperarSituacaoRegrasTerminarParaPassarParaProximaTela()
     {
         esperarSituacaoRegrasTerminarParaPassarParaProximaTelaDeveriaTerminarSemFazerNada = false;
         while (this.usuarioEstaDentroDeLetsJam == true ||
                 (this.usuarioEstaDentroDeLetsJam == false && (this.arquivoAudioSituacaoAtualRegras.isPlaying == true || this.arquivoAudioSituacaoAtualMelody.isPlaying == true)))
         {
-            yield return new WaitForSeconds(.1f);
+            yield return new WaitForSeconds(1);
         }
 
         if (esperarSituacaoRegrasTerminarParaPassarParaProximaTelaDeveriaTerminarSemFazerNada == false)

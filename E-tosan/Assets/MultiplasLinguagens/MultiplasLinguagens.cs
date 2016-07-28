@@ -110,6 +110,24 @@ public class MultiplasLinguagens : MonoBehaviour
         Text tituloFimDeJogo = GameObject.Find("tituloFimDeJogo").GetComponent<Text>();
         tituloFimDeJogo.text = fim_de_jogo;
 
+        string pontuacao_final_dois_pontos = LMan.getString("pontuacao_final_dois_pontos");
+        Text pontuacaoFinalModoHougaii = GameObject.Find("pontuacaoFinalModoHougaii").GetComponent<Text>();
+        pontuacaoFinalModoHougaii.text = pontuacao_final_dois_pontos;
+
+        string moedas_obtidas_dois_pontos = LMan.getString("moedas_obtidas_dois_pontos");
+        Text moedas_obtidas = GameObject.Find("moedas_obtidas").GetComponent<Text>();
+        moedas_obtidas.text = moedas_obtidas_dois_pontos;
+
+        string moedas_dois_pontos = LMan.getString("moedas_dois_pontos");
+        Text moedasFimDeJogo = GameObject.Find("moedasFimDeJogo").GetComponent<Text>();
+        moedasFimDeJogo.text = moedas_dois_pontos;
+
+        string reiniciar = LMan.getString("reiniciar");
+        Text reiniciarTextoFimDeJogo = GameObject.Find("reiniciarTextoFimDeJogo").GetComponent<Text>();
+        reiniciarTextoFimDeJogo.text = reiniciar;
+
+        Text menuInicialTextoFimDeJogo = GameObject.Find("menuInicialTextoFimDeJogo").GetComponent<Text>();
+        menuInicialTextoFimDeJogo.text = menu_principal;
 
     }
 }

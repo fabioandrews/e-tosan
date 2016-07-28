@@ -95,10 +95,12 @@
     <Compile Include="Assets\modohougaii\botaoAbrirLetsJam.cs" />
     <Compile Include="Assets\modohougaii\botaoInicioLetsJam.cs" />
     <Compile Include="Assets\modohougaii\botaoRecomecarAudioSituacaoAtual.cs" />
+    <Compile Include="Assets\modohougaii\botaoReiniciarFimJogoModoHougaii.cs" />
     <Compile Include="Assets\modohougaii\botaoTelaEscolhaEtosan.cs" />
     <Compile Include="Assets\modohougaii\botaoVoltarATelaSituacaoHougaii.cs" />
     <Compile Include="Assets\modohougaii\carinha_para_encher.cs" />
     <Compile Include="Assets\modohougaii\telaEscolhaEtosanHougaii.cs" />
+    <Compile Include="Assets\modohougaii\telaFimDeJogoModoHougaii.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\GradientGUIBars\ReadMe\AboutFonts.txt" />

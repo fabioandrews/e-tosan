@@ -27,6 +27,7 @@ public class ModoHougaii : MonoBehaviour
     private int quantasCarinhasAfeicaoMelodyEstaoCheias;
     private int percentualCarinhaBondade; //percentual de uma carinha ainda nao cheia de bondade
     private int quantasCarinhasBondadeEstaoCheias;
+    private int quantasMoedasObtidasDuranteOJogo; //quantas moedas foram obtidas em uma partida do modo hougaii
 
     private AudioSource source; //util para qualuqer efeito sonoro que o jogo precise executar
     public AudioClip errou_alternativa_escolha_etosan;
@@ -48,6 +49,7 @@ public class ModoHougaii : MonoBehaviour
         this.quantasCarinhasAfeicaoMelodyEstaoCheias = 0;
         this.percentualCarinhaBondade = 0;
         this.quantasCarinhasBondadeEstaoCheias = 0;
+        this.quantasMoedasObtidasDuranteOJogo = 0;
 
 
         this.tornarTodosOsPopupsDestaCenaInvisiveis();
@@ -139,6 +141,10 @@ public class ModoHougaii : MonoBehaviour
     public int getquantasCarinhasBondadeEstaoCheias()
     {
         return this.quantasCarinhasBondadeEstaoCheias;
+    }
+    public int getquantasMoedasObtidasDuranteOJogo()
+    {
+        return this.quantasMoedasObtidasDuranteOJogo;
     }
 
     //versao antiga! as carinhas apenas enchem!
@@ -321,7 +327,7 @@ public class ModoHougaii : MonoBehaviour
         else
         {
             turnoDeQuatroSituacoesAtual = this.turnoDeQuatroSituacoesAtual + 1;
-            if (this.turnoDeQuatroSituacoesAtual > 2)
+            if (this.turnoDeQuatroSituacoesAtual > 1) //SOH PARA TESTES! AQUI DEVERIA SER 2
             {
                 //HORA DE TERMINAR O JOGO!!!
                 this.terminarOJogo();
@@ -423,6 +429,7 @@ public class ModoHougaii : MonoBehaviour
         telaFimDeJogo.voltarAPosicaoInicial();
         PopupWindowBehavior telaFimDeJogoTexto = GameObject.Find("telaFimDeJogoTexto").GetComponent<PopupWindowBehavior>();
         telaFimDeJogoTexto.voltarAPosicaoInicial();
+        GameObject.Find("telaFimDeJogo").GetComponent<telaFimDeJogoModoHougaii>().mudarTextosDATelaFimDeJogoModoHougaii();
     }
 
     public void playEfeitoSonoro(string nomeEfeitoSonoro)
@@ -439,6 +446,11 @@ public class ModoHougaii : MonoBehaviour
         }
 
         this.source.Play();
+    }
+
+    public void reiniciarJogoModoHougaii()
+    {
+        Application.LoadLevel(Application.loadedLevel);
     }
 
 }
