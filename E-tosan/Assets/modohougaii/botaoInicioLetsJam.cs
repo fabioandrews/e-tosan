@@ -25,8 +25,30 @@ public class botaoInicioLetsJam : MonoBehaviour
     {
         ModoHougaii modoHougaii = GameObject.Find("Main Camera").GetComponent<ModoHougaii>();
         LinkedList<SituacaoModoHougaii> quatroSituacoesAtuais = modoHougaii.getquatroSituacoesAtuais();
-        string[] nomesArquivosParaRadio = pegarNomesArquivosDeAudioParaRadio(this.tipo_de_botao, quatroSituacoesAtuais);
-        
+        SituacaoModoHougaii situacaoAtual = modoHougaii.getsituacaoAtual(); //a situacao atual n faz parte das quatro situacoes atuais(ela eh removida da linkedlist assim que eh usada), mas deveria
+
+        string[] nomesArquivosParaRadio;
+        if (quatroSituacoesAtuais.Count < 4)
+        {
+            //certeza que a situacao atual foi deixada de lado. Vamos inseri-la! Agora, nao podemos alterar a linkedlist. Vamos criar uma nova
+            //se nao criarmos uam nova e fizermos addlast, a lista de origem tb serah aumentada
+            LinkedList<SituacaoModoHougaii> quatroSituacoesAtuaisNovinha = new LinkedList<SituacaoModoHougaii>();
+            LinkedListNode<SituacaoModoHougaii> percorredorLista = quatroSituacoesAtuais.First;
+            while (percorredorLista != null && percorredorLista.Value != null)
+            {
+                quatroSituacoesAtuaisNovinha.AddLast(percorredorLista.Value);
+                percorredorLista = percorredorLista.Next;
+            }
+
+            quatroSituacoesAtuaisNovinha.AddLast(situacaoAtual);
+            nomesArquivosParaRadio = pegarNomesArquivosDeAudioParaRadio(this.tipo_de_botao, quatroSituacoesAtuaisNovinha);
+
+        }
+        else
+        {
+            nomesArquivosParaRadio = pegarNomesArquivosDeAudioParaRadio(this.tipo_de_botao, quatroSituacoesAtuais);
+        }
+
         RadioLetsJam radioLetsJam = GameObject.Find("radioLetsJam").GetComponent<RadioLetsJam>();
         PopupWindowBehavior radioLetsJamComoPopupWindow = GameObject.Find("radioLetsJam").GetComponent<PopupWindowBehavior>();
         radioLetsJamComoPopupWindow.voltarAPosicaoInicial();

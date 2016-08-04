@@ -14,6 +14,7 @@ public class ModoHougaii : MonoBehaviour
 {
     private FornecedorDeSituacoes fornecedorSituacoes; //classe que olha o BD e pega situacoes para o jogo
     private LinkedList<SituacaoModoHougaii> quatroSituacoesAtuais; //usuario treina de 4 em 4 situacoes
+    private SituacaoModoHougaii situacaoAtual; //a situacao que atualmente esta pasando na tela da situacao. Nessa classe, esse atribute eh util apenas para o botaoInicioLetsJam conseguir obter as quatro situacoes atuais e nao apenas 3
     private bool melodyEstahZangadaAtualmente;
     private string fecharLetsJamDeveVoltarAQualTela; //pode ser situacaoAtual, pode ser a tela onde o usuario escolhe a resposta correta ou pode ser 
     private int turnoDeQuatroSituacoesAtual; //de 4 em 4 situacoes esse valor aumenta
@@ -32,6 +33,7 @@ public class ModoHougaii : MonoBehaviour
     private AudioSource source; //util para qualuqer efeito sonoro que o jogo precise executar
     public AudioClip errou_alternativa_escolha_etosan;
     public AudioClip acertou_alternativa_escolha_etosan;
+    public AudioClip obteu_moedinha_barra_bondade_ou_afeicao;
 
     // Use this for initialization
     void Start ()
@@ -42,6 +44,7 @@ public class ModoHougaii : MonoBehaviour
         this.turnoDeQuatroSituacoesAtual = 0;
         this.scoreDaPartida = 0;
         this.quatroSituacoesAtuais = new LinkedList<SituacaoModoHougaii>();
+        this.situacaoAtual = null;
 
         this.percentualDaBarrinhaAfeicaoMelody = 50;
         this.percentualDaBarrinhaBondade = 50;
@@ -92,9 +95,15 @@ public class ModoHougaii : MonoBehaviour
         this.quatroSituacoesAtuais = fornecedorSituacoes.fornecer4Situacoes(melodyEstahZangadaAtualmente);
     }
 
-    public LinkedList<SituacaoModoHougaii> getquatroSituacoesAtuais()
+    public LinkedList<SituacaoModoHougaii> getquatroSituacoesAtuais() //essa linked list pode nao ter size = 4 sempre. Ela pode diminuir
     {
         return this.quatroSituacoesAtuais;
+    }
+
+    //funcao chamada apenas por botaoInicioLetsJam porque ele precisa tanto das quatroSituacoesAtuais como da situacao que ja foi removida de quatroSituacoesAtuais
+    public SituacaoModoHougaii getsituacaoAtual()
+    {
+        return this.situacaoAtual;
     }
 
     public void setscoreDaPartida(int novoValor)
@@ -145,6 +154,11 @@ public class ModoHougaii : MonoBehaviour
     public int getquantasMoedasObtidasDuranteOJogo()
     {
         return this.quantasMoedasObtidasDuranteOJogo;
+    }
+    //as vezes a barrinha de bondade e afeicao farah o usuario ganhar moedinhas novas!
+    public void aumentarquantasMoedasObtidasDuranteOJogo(int quantasMoedasAMais)
+    {
+        this.quantasMoedasObtidasDuranteOJogo = this.quantasMoedasObtidasDuranteOJogo + quantasMoedasAMais;
     }
 
     //versao antiga! as carinhas apenas enchem!
@@ -315,6 +329,7 @@ public class ModoHougaii : MonoBehaviour
                 }
             }
 
+            this.situacaoAtual = situacaoVouRemover;
             this.quatroSituacoesAtuais.Remove(situacaoVouRemover);
             GameObject telaSituacaoHougaii = GameObject.Find("telaSituacaoHougaii");
             TelaSituacaoHougaii telaSituacaoHougaiiComTipoReal = telaSituacaoHougaii.GetComponent<TelaSituacaoHougaii>();
@@ -323,6 +338,8 @@ public class ModoHougaii : MonoBehaviour
             telaSituacaoHougaiiComTipoReal.setUsuarioEstaDentroDeLetsJam(false);
             aoFecharLetsJamMostrarQualTela = "telaSituacaoHougaii";
             this.fazerTelaSituacaoHougaiiAparecer();
+
+            //imprimirQuatroSituacaosAtuaisESituacaoAtual();
         }
         else
         {
@@ -356,6 +373,7 @@ public class ModoHougaii : MonoBehaviour
                     }
                 }
 
+                this.situacaoAtual = situacaoVouRemover;
                 this.quatroSituacoesAtuais.Remove(situacaoVouRemover);
                 
                 GameObject telaSituacaoHougaii = GameObject.Find("telaSituacaoHougaii");
@@ -367,8 +385,25 @@ public class ModoHougaii : MonoBehaviour
                 //this.fazerTelaSituacaoHougaiiAparecer();
                 this.fazerPopupLetsJamAparecer();
                 aoFecharLetsJamMostrarQualTela = "telaSituacaoHougaii";
+
+                //imprimirQuatroSituacaosAtuaisESituacaoAtual();
             }
         }
+    }
+
+    private void imprimirQuatroSituacaosAtuaisESituacaoAtual()
+    {
+        print("//////quatro atuais");
+        LinkedListNode<SituacaoModoHougaii> percorredorLista = quatroSituacoesAtuais.First;
+        while (percorredorLista != null && percorredorLista.Value != null)
+        {
+            print(percorredorLista.Value.getnomeArquivoWavMelody());
+            percorredorLista = percorredorLista.Next;
+        }
+
+        print("/////a atual");
+        print(this.situacaoAtual.getnomeArquivoWavMelody());
+
     }
 
     private void tornarTodosOsPopupsDestaCenaInvisiveis()
@@ -420,6 +455,13 @@ public class ModoHougaii : MonoBehaviour
         PopupWindowBehavior telaFimDeJogoTexto = GameObject.Find("telaFimDeJogoTexto").GetComponent<PopupWindowBehavior>();
         telaFimDeJogoTexto.obterPosicaoInicial();
         telaFimDeJogoTexto.irParaPosicaoDeDesaparecer();
+
+        moedaBarra moedaBarraBondade = GameObject.Find("moedaBarraBondade").GetComponent<moedaBarra>();
+        moedaBarraBondade.obterPosicaoInicial(); //pq faco isso aqui? Porque embora moeda nao seja GUI, preciso da posicao inicial dela no comeco do jogo!
+        //as moedas nao precisam voltar a sua posicao inicial porque isso ja acontece quando a barra de bondade e afeicao voltam a sua posicao inicial... elas voltam tb, que na verdade significa que elas setam o alpha
+        moedaBarra moedaBarraAfeicaoMelody = GameObject.Find("moedaBarraAfeicaoMelody").GetComponent<moedaBarra>();
+        moedaBarraAfeicaoMelody.obterPosicaoInicial(); 
+
     }
 
     //FALTA TERMINAR O JOGO!!!
@@ -443,6 +485,10 @@ public class ModoHougaii : MonoBehaviour
         else if (nomeEfeitoSonoro.CompareTo("acertou_alternativa_escolha_etosan") == 0)
         {
             this.source.clip = acertou_alternativa_escolha_etosan;
+        }
+        else if (nomeEfeitoSonoro.CompareTo("obteu_moedinha_barra_bondade_ou_afeicao") == 0)
+        {
+            this.source.clip = obteu_moedinha_barra_bondade_ou_afeicao;
         }
 
         this.source.Play();

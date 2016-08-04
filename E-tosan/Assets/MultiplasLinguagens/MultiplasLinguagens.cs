@@ -8,6 +8,7 @@ public class MultiplasLinguagens : MonoBehaviour
 {
     //coisas necessarias para dar suporte a multiplas linguagens
     private static Lang LMan;
+    //private string currentLang = "English"; //linguagem padrao do aplicativo
     private string currentLang = "English"; //linguagem padrao do aplicativo
 
     public void OnEnable()

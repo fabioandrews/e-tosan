@@ -99,6 +99,7 @@
     <Compile Include="Assets\modohougaii\botaoTelaEscolhaEtosan.cs" />
     <Compile Include="Assets\modohougaii\botaoVoltarATelaSituacaoHougaii.cs" />
     <Compile Include="Assets\modohougaii\carinha_para_encher.cs" />
+    <Compile Include="Assets\modohougaii\moedaBarra.cs" />
     <Compile Include="Assets\modohougaii\telaEscolhaEtosanHougaii.cs" />
     <Compile Include="Assets\modohougaii\telaFimDeJogoModoHougaii.cs" />
   </ItemGroup>

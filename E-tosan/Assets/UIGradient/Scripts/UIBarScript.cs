@@ -69,6 +69,8 @@ public class UIBarScript : MonoBehaviour
             this.GetComponent<CanvasGroup>().alpha = 0.0f;
             GameObject.Find("cara_anjinho").GetComponent<Renderer>().enabled = false;
             GameObject.Find("cara_diabinho").GetComponent<Renderer>().enabled = false;
+            GameObject.Find("moedaBarraBondade").GetComponent<Renderer>().enabled = false;
+            GameObject.Find("quantasMoedasObtidasBarraBondade").GetComponent<CanvasGroup>().alpha = 0.0f;
 
         }
 
@@ -77,6 +79,8 @@ public class UIBarScript : MonoBehaviour
             this.GetComponent<CanvasGroup>().alpha = 0.0f;
             GameObject.Find("melody_zangada").GetComponent<Renderer>().enabled = false;
             GameObject.Find("melody_sorrindo").GetComponent<Renderer>().enabled = false;
+            GameObject.Find("moedaBarraAfeicaoMelody").GetComponent<Renderer>().enabled = false;
+            GameObject.Find("quantasMoedasObtidasBarraAfeicaoMelody").GetComponent<CanvasGroup>().alpha = 0.0f;
 
         }
     }
@@ -89,6 +93,8 @@ public class UIBarScript : MonoBehaviour
             this.GetComponent<CanvasGroup>().alpha = 1.0f;
             GameObject.Find("cara_anjinho").GetComponent<Renderer>().enabled = true;
             GameObject.Find("cara_diabinho").GetComponent<Renderer>().enabled = true;
+            GameObject.Find("moedaBarraBondade").GetComponent<Renderer>().enabled = true;
+            GameObject.Find("quantasMoedasObtidasBarraBondade").GetComponent<CanvasGroup>().alpha = 0.0f; //o texto com +3 moedas... soh aparece quando o usuario realmente ganha a moedinha
         }
 
         if (this.gameObject.name.CompareTo("barra_afeicao_melody") == 0)
@@ -96,6 +102,8 @@ public class UIBarScript : MonoBehaviour
             this.GetComponent<CanvasGroup>().alpha = 1.0f;
             GameObject.Find("melody_zangada").GetComponent<Renderer>().enabled = true;
             GameObject.Find("melody_sorrindo").GetComponent<Renderer>().enabled = true;
+            GameObject.Find("moedaBarraAfeicaoMelody").GetComponent<Renderer>().enabled = true;
+            GameObject.Find("quantasMoedasObtidasBarraAfeicaoMelody").GetComponent<CanvasGroup>().alpha = 0.0f;
 
         }
 

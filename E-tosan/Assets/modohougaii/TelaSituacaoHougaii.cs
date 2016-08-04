@@ -27,9 +27,11 @@ public class TelaSituacaoHougaii : MonoBehaviour
     public Sprite sprite_para_figura_central_regras;
 
     private bool arquivoAudioMelodyComecou;
-    //esses booleanos servem para a thread que fica esperando o audio da melody acabar para tocar o das regras soh tocar
+    //esse booleano serve para a thread que fica esperando o audio da melody acabar para tocar o das regras soh tocar
     //as regras quando necessario. Existiam casos em que as regras eram tocadas e o da melody nao tocava nunca. Nao mais!
-    //booleano eh ativado no comecinho de comecarArquivoDeAudioDaMelodyEMudarFiguraCentral()(vira regras) e comecarArquivoDeAudioRegrasEMudarFiguraCentral()(vira nenhum) e iniciarNovamenteTelaSituacaoHougaii()(vira melody)...
+
+    private int quantosArquivosSituacaoForamLoaded; //booleano que serve porque carregar os arquivos de audio da situacao atual da melody e regras sao coroutines
+    private bool aindaCarregandoArquivosSituacao;
 
     // Use this for initialization
     void Start ()
@@ -87,6 +89,11 @@ public class TelaSituacaoHougaii : MonoBehaviour
     public void setUsuarioEstaDentroDeLetsJam(bool novoValor)
     {
         usuarioEstaDentroDeLetsJam = novoValor;
+
+        /*print("arquivoAudioSituacaoAtualRegrasEstaPausado =" + arquivoAudioSituacaoAtualRegrasEstaPausado);
+        print("arquivoAudioSituacaoAtualMelodyEstaPausado =" + arquivoAudioSituacaoAtualMelodyEstaPausado);
+        print("this.arquivoAudioSituacaoAtualMelody.isPlaying=" + this.arquivoAudioSituacaoAtualMelody.isPlaying);
+        print("this.arquivoAudioSituacaoAtualRegras.isPlaying=" + this.arquivoAudioSituacaoAtualRegras.isPlaying);*/
 
         if (usuarioEstaDentroDeLetsJam == true)
         {
@@ -148,6 +155,8 @@ public class TelaSituacaoHougaii : MonoBehaviour
     public void setarSituacaoAtualESeuArquivoDeAudio(SituacaoModoHougaii situacaoNova)
     {
         this.situacaoAtual = situacaoNova;
+        this.quantosArquivosSituacaoForamLoaded = 0;
+        this.aindaCarregandoArquivosSituacao = true;
 
         //falta procurar, carregar e setar o arquivo de audio
         GameObject modoHougaii = GameObject.Find("Main Camera");
@@ -155,6 +164,9 @@ public class TelaSituacaoHougaii : MonoBehaviour
 
         string ondeEstaoOsArquivosDeAudioDeSituacoes=
             modoHougaiiComTipoReal.getondeEstaoOsArquivosDeAudioDeSituacoes();
+        print("ondeEstaoOsArquivosDeAudioDeSituacoes:" + ondeEstaoOsArquivosDeAudioDeSituacoes);
+        print("situacaoAtual.getnomeArquivoWavMelody()" + situacaoAtual.getnomeArquivoWavMelody());
+        print("situacaoAtual.getnomeArquivoWavRegras()" + this.situacaoAtual.getnomeArquivoWavRegras());
 
         if (soundFiles == null)
         {
@@ -177,7 +189,6 @@ public class TelaSituacaoHougaii : MonoBehaviour
                 soundFiles.AddLast(umFileInfo);
             }
         }
-
 
         foreach (var s in soundFiles)
         {
@@ -226,14 +237,22 @@ public class TelaSituacaoHougaii : MonoBehaviour
 
             this.arquivoAudioSituacaoAtualRegras.clip = clip;
         }
-        
+
+        this.quantosArquivosSituacaoForamLoaded = this.quantosArquivosSituacaoForamLoaded + 1;
+
+        if (this.quantosArquivosSituacaoForamLoaded >= 2)
+        {
+            this.aindaCarregandoArquivosSituacao = false;
+        }
+
     }
     
 
     private void comecarArquivoDeAudioDaMelodyEMudarFiguraCentral()
     {
         //hora de comecar algum arquivo de audio: o da melody
-        this.arquivoAudioSituacaoAtualMelody.Play();
+        //this.arquivoAudioSituacaoAtualMelody.Play();
+        StartCoroutine(esperarTerminouDeCarregarArquivosSituacaoParaDarPlayNoArquivoAudioMelody());
         arquivoDeAudioQueEstaTocandoAgoraEhmelodyOUregras = "melody";
 
         //mudar figura central
@@ -245,6 +264,29 @@ public class TelaSituacaoHougaii : MonoBehaviour
         //inicio uma thread para assim que o arquivo de audio com a fala da melody parar, o da regras comecar
 
     }
+
+    //o arquivo de audio da melody precisa ser loaded em LoadFile antes de eu playar ele. O loadfile eh uma corotina, entao nao se sabe quando ela termina
+    IEnumerator esperarTerminouDeCarregarArquivosSituacaoParaDarPlayNoArquivoAudioMelody()
+    {
+        double tempoDecorrido = 0.0;
+        while (this.aindaCarregandoArquivosSituacao == true)
+        {
+            yield return new WaitForSeconds(0.1f);
+            tempoDecorrido = tempoDecorrido + 0.1f;
+
+            if (tempoDecorrido > 5.0)
+            {
+                print("algo de errado ocorre! Arquivo melody nunca eh playado!");
+                //esta demorando demais! Vamos tentar reiniciar o arquivo de audio da melody novamente, tudo bem?
+                //this.setarSituacaoAtualESeuArquivoDeAudio(this.situacaoAtual);
+            }
+        }
+
+        //depois de esperar que os clipes estejam carregados, eh finalmente hora de playar o arquivo da melody
+        this.arquivoAudioSituacaoAtualMelody.Play();
+        print("deu play arquivo melody!");
+    }
+
 
     private void comecarArquivoDeAudioRegrasEMudarFiguraCentral()
     {

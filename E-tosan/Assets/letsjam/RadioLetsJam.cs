@@ -121,6 +121,11 @@ public class RadioLetsJam : MonoBehaviour
 
     IEnumerator esperarTerminouDeCarregarClips()
     {
+        GameObject previous = GameObject.Find("previous");
+        previous.SetActive(false);
+        GameObject skip = GameObject.Find("skip");
+        skip.SetActive(false);
+
         while (this.terminouDeCarregarClips() == false || currentIndex >= clips.Count)
         {
             yield return new WaitForSeconds(0.1f);
@@ -129,6 +134,11 @@ public class RadioLetsJam : MonoBehaviour
         //depois de esperar que os clipes estejam carregados, eh finalmente hora de PlayCurrent() playar o audio
         source.clip = clips[currentIndex];
         source.Play();
+
+        //botoes devem estar ativos
+        previous.SetActive(true);
+        skip.SetActive(true);
+
         this.mudarNomeMusicaAtualRadioLetsJam();
         this.mudarTraducaoMusicaAtualRadioLetsJam();
     }
@@ -185,7 +195,7 @@ public class RadioLetsJam : MonoBehaviour
         for (int i = 0; i < fileInfos.Length; i++)
         {
             FileInfo umFileInfo = fileInfos[i];
-            Debug.Log(umFileInfo.Name);
+            //Debug.Log(umFileInfo.Name);
             if (nomeArquivoEstaPresenteEmArquivosDoRadio(umFileInfo.Name) == true)
             {
                 soundFiles.AddLast(umFileInfo);

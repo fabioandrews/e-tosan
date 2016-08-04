@@ -46,6 +46,7 @@
         <string name="menu_principal">Menu principal</string>
       <string name="tem_certeza_que_quer_ir_ao_menu_principal">Tem certeza que quer ir ao menu principal?</string>
       <string name="sim">Sim</string>
+      <string name="nao">Não</string>
       <string name="pause">Pause</string>
      <string name="formas_verbais">Formas verbais</string>
      <string name="verbos">Verbos</string>

@@ -9,7 +9,13 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
     private SituacaoModoHougaii situacaoAtual;
     public bool barraAfeicaoMelodyTerminouDeSubirOuDescer;
     public bool barraBondadeTerminouDeSubirOuDescer;
-    //so depois destes bool atualizarem eh que o jogo continua e uma nova situacao eh selecionada
+
+
+    public bool moedaBarraBondadeJaFoiGerada = false;
+    public int percentualDaMoedaBarraBondade; //precisamos disso para saber quando o usuario vai ganhar dinheiro ao encher barra bondade
+    public bool moedaBarraAfeicaoMelodyJaFoiGerada = false;
+    public int percentualDaMoedaBarraAfeicaoMelody; //precisamos disso para saber quando o usuario vai ganhar dinheiro ao encher barra bondade
+
 
     // Use this for initialization
     void Start ()
@@ -30,10 +36,20 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
 
         //vamos mudar o texto nos botoes de acordo com a situacao atual
         this.mudarTextosBotoesTelaEscolhaEtosan();
-        //this.mudarscoreTexto();
 
         barraAfeicaoMelodyTerminouDeSubirOuDescer = false;
         barraBondadeTerminouDeSubirOuDescer = false;
+
+        //gerar aquela moedinha da barra bondade que pode ser obtida pelo usuario
+        if (this.moedaBarraBondadeJaFoiGerada == false)
+        {
+            this.gerarMoedaBarraBondade();
+        }
+
+        if (this.moedaBarraAfeicaoMelodyJaFoiGerada == false)
+        {
+            this.gerarMoedaBarraAfeicaoMelody();
+        }
 
     //para testar o funcionamento das barras de afeicao e bondade diminuindo seus valores, basta descomentar a linha seguinte
     /*UIBarScript barra_afeicao_melody = GameObject.Find("barra_afeicao_melody").GetComponent<UIBarScript>();
@@ -45,6 +61,55 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
     StartCoroutine(fazerBarraAumentarOuDiminuirGradativamente(barra_bondade, (float)0.51));*/
     }
 
+    //toda vez que a tela da escolha etosan aparecer, uma nova moeda deve ser gerada em uma posicao da barra bondade
+    //exceto se ela ja tiver sido gerada
+    private void gerarMoedaBarraBondade()
+    {
+        GameObject moedaBarraBondade = GameObject.Find("moedaBarraBondade");
+        moedaBarra moedaBarraTipoDeVerdade = moedaBarraBondade.GetComponent<moedaBarra>();
+        //primeiro vamos fazer a moeda voltar a posicao inicial, para depois gerarmos uma posicao aleatoria a partir desta posicao
+        moedaBarraTipoDeVerdade.voltarAPosicaoInicial();
+
+        int percentagemDaMoedaBondade = UnityEngine.Random.Range(0,100);
+        //percentagemDaMoedaBondade = (float) Math.Round((Decimal)percentagemDaMoedaBondade, 2, MidpointRounding.AwayFromZero);
+        this.percentualDaMoedaBarraBondade = percentagemDaMoedaBondade;
+        float posicaoMoedaTemDeIrAMais = ((this.percentualDaMoedaBarraBondade) * 214.0f) / 100.0f;
+        Vector3 vetorParaMoverApenasXdaMoeda = new Vector3(posicaoMoedaTemDeIrAMais, 0, 0);
+        moedaBarraBondade.transform.localPosition += vetorParaMoverApenasXdaMoeda;
+        this.moedaBarraBondadeJaFoiGerada = true;
+
+        moedaBarraTipoDeVerdade.setPercentual(this.percentualDaMoedaBarraBondade);
+
+        /*SOLUCAO ANTIGA: GERAR POSICAO DA MOEDA PRIMEIRO E DEPOIS PERCENTUAL
+         * GameObject moedaBarraBondade = GameObject.Find("moedaBarraBondade");
+        System.Random rnd = new System.Random();
+        Double posicaoAMaisQueAMoedaTemDeIrDouble = (double) rnd.Next(0, 214); //a moeda estah na posicao inicial de -107.0 epode ir ate 214. O quanto ela deve ser movida? 100% eh +214, entao 
+        float posicaoAMaisQueAMoedaTemDeIrFloat = (float)posicaoAMaisQueAMoedaTemDeIrDouble;
+        Vector3 vetorParaMoverApenasXdaMoeda = new Vector3(posicaoAMaisQueAMoedaTemDeIrFloat, 0, 0);
+        moedaBarraBondade.transform.localPosition += vetorParaMoverApenasXdaMoeda;
+        Double percentagemMoedaBondade = ((posicaoAMaisQueAMoedaTemDeIrDouble*(1.0))/214.00);//pode ir de 0.0 ate 100.0
+        percentagemMoedaBondade = Math.Round(percentagemMoedaBondade, 2);
+        //como calculei acima? Bem, temos um intervalo de 0 ate 214, certo? Entao x equivale a y% e 214 equivale a 100%, que na vdd eh 1.0, pois soh vai de 1.0 ateh 0.0. Cruz credo dah...
+        this.percentualDaMoedaBarraBondade = (float)percentagemMoedaBondade;
+        this.moedaBarraBondadeJaFoiGerada = true; */
+    }
+
+    private void gerarMoedaBarraAfeicaoMelody()
+    {
+        GameObject moedaBarraAfeicaoMelody = GameObject.Find("moedaBarraAfeicaoMelody");
+        moedaBarra moedaBarraTipoDeVerdade = moedaBarraAfeicaoMelody.GetComponent<moedaBarra>();
+        //primeiro vamos fazer a moeda voltar a posicao inicial, para depois gerarmos uma posicao aleatoria a partir desta posicao
+        moedaBarraTipoDeVerdade.voltarAPosicaoInicial();
+
+        int percentagemDaMoedaAfeicaoMelody = UnityEngine.Random.Range(0, 100);
+        this.percentualDaMoedaBarraAfeicaoMelody = percentagemDaMoedaAfeicaoMelody;
+        float posicaoMoedaTemDeIrAMais = ((this.percentualDaMoedaBarraAfeicaoMelody) * 214.0f) / 100.0f;
+        Vector3 vetorParaMoverApenasXdaMoeda = new Vector3(posicaoMoedaTemDeIrAMais, 0, 0);
+        moedaBarraAfeicaoMelody.transform.localPosition += vetorParaMoverApenasXdaMoeda;
+        this.moedaBarraAfeicaoMelodyJaFoiGerada = true;
+
+        moedaBarraTipoDeVerdade.setPercentual(this.percentualDaMoedaBarraAfeicaoMelody);
+    }
 
     private void mudarTextosBotoesTelaEscolhaEtosan()
     {
@@ -53,42 +118,6 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
         GameObject.Find("botaoTelaEscolhaEtosan1").GetComponent<botaoTelaEscolhaEtosan>().mudarTextoRelacionado(textoBotao1, "botaoTelaEscolhaEtosan1");
         GameObject.Find("botaoTelaEscolhaEtosan2").GetComponent<botaoTelaEscolhaEtosan>().mudarTextoRelacionado(textoBotao2, "botaoTelaEscolhaEtosan2");
     }
-
-    private void mudarscoreTexto()
-    {
-        ModoHougaii modoHougaii = GameObject.Find("Main Camera").GetComponent<ModoHougaii>();
-        int score = modoHougaii.getscoreDaPartida();
-
-        Text objetoScoreTexto = GameObject.Find("scoreTexto").GetComponent<Text>();
-        string textoScoreTexto = objetoScoreTexto.text;
-
-        //primeiro vou remover tudo que tiver de numero no texto de score
-        textoScoreTexto  = Regex.Replace(textoScoreTexto, @"[0-9\-]", string.Empty);
-
-        //agora adicionar o novo score na string
-        if (score < 10)
-        {
-            textoScoreTexto = textoScoreTexto + "0000";
-        }
-        else if (score < 100)
-        {
-            textoScoreTexto = textoScoreTexto + "000";
-        }
-        else if (score < 1000)
-        {
-            textoScoreTexto = textoScoreTexto + "00";
-        }
-        else if (score < 10000)
-        {
-            textoScoreTexto = textoScoreTexto + "0";
-        }
-
-        textoScoreTexto = textoScoreTexto + score.ToString();
-
-        //agora mudar o objeto
-        objetoScoreTexto.text = textoScoreTexto;
-    }
-
 
     IEnumerator fazerScoreAumentarOuDiminuirGradativamente(int scoreAntigo, int scoreNovo)
     {
@@ -197,6 +226,8 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
         this.encherOuDiminuirBarraAfeicaoMelody(respostaUsuario);
         this.encherOuDiminuirBarraBondade(respostaUsuario);
 
+        //o enchimento das carinhas de bondade e afeicao sao feitos apenas apos as barrinhas encherem por uma corotina
+
         int percentualCarinhaAfeicaoMelodyAntigo = modoHougaii.getpercentualCarinhaAfeicaoMelody();
         int percentualCarinhaBondadeAntigo = modoHougaii.getpercentualCarinhaBondade();
         int quantasCarinhasAfeicaoMelodyEstaoCheiasAntigo = modoHougaii.getquantasCarinhasAfeicaoMelodyEstaoCheias();
@@ -255,6 +286,7 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
         this.fazerEssaTelaEscolhaEtosanHougaiiDesaparecer();
         modoHougaii.definirNovaSituacaoAtualTelaHougaii();
     }
+
 
     private void encherOuDiminuirBarraAfeicaoMelody(string respostaUsuario)
     {
@@ -424,6 +456,15 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
         //fazendo cruz-credo: 100 equivale a 1 entao percentualBarrinhaNovo equivale a x, tenho o x acima
         string nome_barra = "barra_afeicao_melody";
         StartCoroutine(fazerBarraAumentarOuDiminuirGradativamente(barra_afeicao_melody,valorNaQualABarraTemDeParar, nome_barra));
+
+        if (barra_afeicao_melody.Value > valorNaQualABarraTemDeParar)
+        {
+            StartCoroutine(verificarSeUsuarioDeveGanharMoedinhaEnquantoABarraEhAlterada(barra_afeicao_melody, "diminuindo", "barra_afeicao_melody"));
+        }
+        else
+        {
+            StartCoroutine(verificarSeUsuarioDeveGanharMoedinhaEnquantoABarraEhAlterada(barra_afeicao_melody, "aumentando", "barra_afeicao_melody"));
+        }
     }
     private void executarAnimacaoAumentarOuDiminuirBarrinhaBondade(int percentualBarrinhaNovo)
     {
@@ -432,6 +473,15 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
         //fazendo cruz-credo: 100 equivale a 1 entao percentualBarrinhaNovo equivale a x, tenho o x acima
         string nome_barra = "barra_bondade";
         StartCoroutine(fazerBarraAumentarOuDiminuirGradativamente(barra_bondade, valorNaQualABarraTemDeParar, nome_barra));
+
+        if (barra_bondade.Value > valorNaQualABarraTemDeParar)
+        {
+            StartCoroutine(verificarSeUsuarioDeveGanharMoedinhaEnquantoABarraEhAlterada(barra_bondade, "diminuindo", "barra_bondade"));
+        }
+        else
+        {
+            StartCoroutine(verificarSeUsuarioDeveGanharMoedinhaEnquantoABarraEhAlterada(barra_bondade, "aumentando", "barra_bondade"));
+        }
     }
     //esse valor passado como parâmetro tem de estar entre 1 e 0.0. É bom se for multiplo de 10, colocar um digito 1 a mais no final.
     //Por exemplo: (float)0.31 darah 30% da barra
@@ -508,6 +558,160 @@ public class telaEscolhaEtosanHougaii : MonoBehaviour
             }
     }
 
+    private IEnumerator verificarSeUsuarioDeveGanharMoedinhaEnquantoABarraEhAlterada(UIBarScript barraBondadeOuAfeicaoMelody, string barraAumentandoOuDiminuindo, string nomeDaBarra)
+    {
+        bool moedinhaFoiObtida = false;
+        //fazer moedinha ficar com outro sprite aqui mesmo!
+        //print("percentualDaMoeda=" + this.percentualDaMoedaBarraBondade);
+        float valorInicialDaBarra = barraBondadeOuAfeicaoMelody.Value;
+        if (nomeDaBarra.CompareTo("barra_bondade") == 0)
+        {
+            float valorDaMoedaDe0Ate1 = (float)this.percentualDaMoedaBarraBondade / 100;//o valor da percentagem eh de 1 ate 100 entao vamos mudar isso! Tem de ser de 0.0 ate 1.0
+
+            while (this.barraBondadeTerminouDeSubirOuDescer == false && moedinhaFoiObtida == false)
+            {
+                //print("barraBondade=" + Math.Round(barraBondade.Value, 2));
+
+                if (barraAumentandoOuDiminuindo.CompareTo("aumentando") == 0 && valorInicialDaBarra < valorDaMoedaDe0Ate1)
+                {
+                    if (Math.Round(barraBondadeOuAfeicaoMelody.Value, 2) >= valorDaMoedaDe0Ate1)
+                    {
+                        //usuario ganhou uma moedinha!
+                        executarProcedimentoUsuarioGanhouUmaMoedinhaPorEncherBarraBondade();
+                        moedinhaFoiObtida = true;
+                    }
+                }
+                else if (barraAumentandoOuDiminuindo.CompareTo("diminuindo") == 0 && valorInicialDaBarra > valorDaMoedaDe0Ate1)
+                {
+                    if (Math.Round(barraBondadeOuAfeicaoMelody.Value, 2) <= valorDaMoedaDe0Ate1)
+                    {
+                        //usuario ganhou uma moedinha!
+                        executarProcedimentoUsuarioGanhouUmaMoedinhaPorEncherBarraBondade();
+                        moedinhaFoiObtida = true;
+                    }
+                }
+                else if (valorInicialDaBarra == valorDaMoedaDe0Ate1)
+                {
+                    //usuario ganhou uma moedinha!
+                    executarProcedimentoUsuarioGanhouUmaMoedinhaPorEncherBarraBondade();
+                    moedinhaFoiObtida = true;
+                }
+
+                yield return new WaitForSeconds(.100f);
+            }
+        }
+        else
+        {
+            //barra_afeicao_melody
+            float valorDaMoedaDe0Ate1 = (float)this.percentualDaMoedaBarraAfeicaoMelody / 100;//o valor da percentagem eh de 1 ate 100 entao vamos mudar isso! Tem de ser de 0.0 ate 1.0
+
+            while (this.barraAfeicaoMelodyTerminouDeSubirOuDescer == false && moedinhaFoiObtida == false)
+            {
+
+                if (barraAumentandoOuDiminuindo.CompareTo("aumentando") == 0 && valorInicialDaBarra < valorDaMoedaDe0Ate1)
+                {
+                    if (Math.Round(barraBondadeOuAfeicaoMelody.Value, 2) >= valorDaMoedaDe0Ate1)
+                    {
+                        //usuario ganhou uma moedinha!
+                        executarProcedimentoUsuarioGanhouUmaMoedinhaPorEncherBarraAfeicaoMelody();
+                        moedinhaFoiObtida = true;
+                    }
+                }
+                else if (barraAumentandoOuDiminuindo.CompareTo("diminuindo") == 0 && valorInicialDaBarra > valorDaMoedaDe0Ate1)
+                {
+                    if (Math.Round(barraBondadeOuAfeicaoMelody.Value, 2) <= valorDaMoedaDe0Ate1)
+                    {
+                        //usuario ganhou uma moedinha!
+                        executarProcedimentoUsuarioGanhouUmaMoedinhaPorEncherBarraAfeicaoMelody();
+                        moedinhaFoiObtida = true;
+                    }
+                }
+                else if (valorInicialDaBarra == valorDaMoedaDe0Ate1)
+                {
+                    //usuario ganhou uma moedinha!
+                    executarProcedimentoUsuarioGanhouUmaMoedinhaPorEncherBarraAfeicaoMelody();
+                    moedinhaFoiObtida = true;
+                }
+
+                yield return new WaitForSeconds(.100f);
+            }
+        }
+        //print("valor da moeda de 0 a 1:" + valorDaMoedaDe0Ate1);
+        //conversao: 1.0 eh 100%, entao o que eu quero eh relacionado com this.percentualDaMoedaBarraBondade
+    }
+
+
+    private void executarProcedimentoUsuarioGanhouUmaMoedinhaPorEncherBarraBondade()
+    {
+        ModoHougaii modoHougaii = GameObject.Find("Main Camera").GetComponent<ModoHougaii>();
+        System.Random rnd = new System.Random();
+        int quantasMoedasUsuarioObteve = rnd.Next(3, 6); // creates a number between 1 and 12
+        modoHougaii.aumentarquantasMoedasObtidasDuranteOJogo(quantasMoedasUsuarioObteve); // usuario ganhou x moedinhas
+
+        //o texto que fica do lado da moedinha deveria ser alterado tb. Mas ele soh aparece de verdade na funcao fazerMoedinhaETextoFicaremColoridosEDepoisEscurosEExigirGerarNovaMoedinha
+        //enfim, vamos mudar seu value
+        GameObject quantasMoedasObtidasBarraBondade = GameObject.Find("quantasMoedasObtidasBarraBondade");
+        quantasMoedasObtidasBarraBondade.GetComponent<Text>().text = "+" + quantasMoedasUsuarioObteve;
+
+
+        //executar sonzinho de obteu moedinha
+        modoHougaii.playEfeitoSonoro("obteu_moedinha_barra_bondade_ou_afeicao");
+
+
+        StartCoroutine(fazerMoedinhaETextoFicaremColoridosEDepoisEscurosEExigirGerarNovaMoedinha(GameObject.Find("moedaBarraBondade"), "bondade", quantasMoedasObtidasBarraBondade));
+    }
+
+    private void executarProcedimentoUsuarioGanhouUmaMoedinhaPorEncherBarraAfeicaoMelody()
+    {
+        ModoHougaii modoHougaii = GameObject.Find("Main Camera").GetComponent<ModoHougaii>();
+        System.Random rnd = new System.Random();
+        int quantasMoedasUsuarioObteve = rnd.Next(3, 6); // creates a number between 1 and 12
+        modoHougaii.aumentarquantasMoedasObtidasDuranteOJogo(quantasMoedasUsuarioObteve); // usuario ganhou x moedinhas
+
+        //o texto que fica do lado da moedinha deveria ser alterado tb. Mas ele soh aparece de verdade na funcao fazerMoedinhaETextoFicaremColoridosEDepoisEscurosEExigirGerarNovaMoedinha
+        //enfim, vamos mudar seu value
+        GameObject quantasMoedasObtidasBarraAfeicaoMelody = GameObject.Find("quantasMoedasObtidasBarraAfeicaoMelody");
+        quantasMoedasObtidasBarraAfeicaoMelody.GetComponent<Text>().text = "+" + quantasMoedasUsuarioObteve;
+
+
+        //executar sonzinho de obteu moedinha
+        modoHougaii.playEfeitoSonoro("obteu_moedinha_barra_bondade_ou_afeicao");
+
+
+        StartCoroutine(fazerMoedinhaETextoFicaremColoridosEDepoisEscurosEExigirGerarNovaMoedinha(GameObject.Find("moedaBarraAfeicaoMelody"), "melody", quantasMoedasObtidasBarraAfeicaoMelody));
+    }
+
+
+    private IEnumerator fazerMoedinhaETextoFicaremColoridosEDepoisEscurosEExigirGerarNovaMoedinha(GameObject moedinha, string bondadeOuMelody, GameObject textoDaMoedinha)
+    {
+        //fazer moedinha ficar com outro sprite aqui mesmo!
+        moedaBarra moedaDaBarra = moedinha.GetComponent<moedaBarra>();
+        moedaDaBarra.mudarSpriteAtual("acesa");
+        //tambem vou fazer o texto(+3,+4...) ficar aceso por um tempo e depois mais nao
+        textoDaMoedinha.GetComponent<CanvasGroup>().alpha = 1.0f;
+
+        double tempoPassado = 0;
+        while (tempoPassado < 2.0)
+        {
+            yield return new WaitForSeconds((float)1);
+            tempoPassado = tempoPassado + 1.0;
+        }
+
+        //fazer moedinha ficar com sprite normal aqui
+        moedaDaBarra.mudarSpriteAtual("apagada");
+        textoDaMoedinha.GetComponent<CanvasGroup>().alpha = 0.0f;
+
+        moedaDaBarra.GetComponent<Renderer>().enabled = false;
+        if (bondadeOuMelody.CompareTo("bondade") == 0)
+        {
+            this.moedaBarraBondadeJaFoiGerada = false;
+        }
+        else
+        {
+            //eh melody
+            this.moedaBarraAfeicaoMelodyJaFoiGerada = false;
+        }
+    }
 
     //essa era a velha funcao, que soh fazia aumentar o percentual da carinha
     /*private void executarAnimacaoAumentarPercentualCarinhaAfeicaoMelody(int percentualAntigo, int novoPercentual, int quantasCarinhasAfeicaoMelodyEstaoCheiasAntigo, ModoHougaii modoHougaii)
